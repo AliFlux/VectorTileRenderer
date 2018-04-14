@@ -322,8 +322,8 @@ ASALocalRun/
 .mfractor/
 
 # Raw files
-.psd
-.pdf
+*.psd
+*.pdf
 
 # Cache
 tile-cache/*

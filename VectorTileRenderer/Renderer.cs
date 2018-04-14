@@ -45,6 +45,13 @@ namespace VectorTileRenderer
                 scale,
             };
 
+            lock (cacheLock)
+            {
+                if (!Directory.Exists(cachePath))
+                {
+                    Directory.CreateDirectory(cachePath);
+                }
+            }
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(bundle);
             var hash = Utils.Sha256(json).Substring(0, 12); // get 12 digits to avoid fs length issues

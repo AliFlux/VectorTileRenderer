@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ConcurrentCollections</name>
+    </assembly>
+    <members>
+        <member name="T:ConcurrentCollections.ConcurrentHashSet`1">
+            <summary>
+            Represents a thread-safe hash-based unique collection.
+            </summary>
+            <typeparam name="T">The type of the items in the collection.</typeparam>
+            <remarks>
+            All public members of <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> are thread-safe and may be used
+            concurrently from multiple threads.
+            </remarks>
+        </member>
+        <member name="P:ConcurrentCollections.ConcurrentHashSet`1.Count">
+            <summary>
+            Gets the number of items contained in the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.
+            </summary>
+            <value>The number of items contained in the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</value>
+            <remarks>Count has snapshot semantics and represents the number of items in the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            at the moment when Count was accessed.</remarks>
+        </member>
+        <member name="P:ConcurrentCollections.ConcurrentHashSet`1.IsEmpty">
+            <summary>
+            Gets a value that indicates whether the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> is empty.
+            </summary>
+            <value>true if the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> is empty; otherwise,
+            false.</value>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that is empty, has the default concurrency level, has the default initial capacity, and
+            uses the default comparer for the item type.
+            </summary>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that is empty, has the specified concurrency level and capacity, and uses the default
+            comparer for the item type.
+            </summary>
+            <param name="concurrencyLevel">The estimated number of threads that will update the
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> concurrently.</param>
+            <param name="capacity">The initial number of elements that the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            can contain.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="concurrencyLevel"/> is
+            less than 1.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"> <paramref name="capacity"/> is less than
+            0.</exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that contains elements copied from the specified <see
+            cref="T:System.Collections.IEnumerable{T}"/>, has the default concurrency
+            level, has the default initial capacity, and uses the default comparer for the item type.
+            </summary>
+            <param name="collection">The <see
+            cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to
+            the new
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is a null reference.</exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that is empty, has the specified concurrency level and capacity, and uses the specified
+            <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+            </summary>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
+            implementation to use when comparing items.</param>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that contains elements copied from the specified <see
+            cref="T:System.Collections.IEnumerable"/>, has the default concurrency level, has the default
+            initial capacity, and uses the specified
+            <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+            </summary>
+            <param name="collection">The <see
+            cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to
+            the new
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
+            implementation to use when comparing items.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is a null reference
+            (Nothing in Visual Basic).
+            </exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Int32,System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> 
+            class that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/>, 
+            has the specified concurrency level, has the specified initial capacity, and uses the specified 
+            <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+            </summary>
+            <param name="concurrencyLevel">The estimated number of threads that will update the 
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> concurrently.</param>
+            <param name="collection">The <see cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to the new 
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/> implementation to use 
+            when comparing items.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="collection"/> is a null reference.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="concurrencyLevel"/> is less than 1.
+            </exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.#ctor(System.Int32,System.Int32,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            class that is empty, has the specified concurrency level, has the specified initial capacity, and
+            uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+            </summary>
+            <param name="concurrencyLevel">The estimated number of threads that will update the
+            <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> concurrently.</param>
+            <param name="capacity">The initial number of elements that the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            can contain.</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
+            implementation to use when comparing items.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="concurrencyLevel"/> is less than 1. -or-
+            <paramref name="capacity"/> is less than 0.
+            </exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.Add(`0)">
+            <summary>
+            Adds the specified item to the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.
+            </summary>
+            <param name="item">The item to add.</param>
+            <returns>true if the items was added to the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            successfully; false if it already exists.</returns>
+            <exception cref="T:System.OverflowException">The <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>
+            contains too many items.</exception>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.Clear">
+            <summary>
+            Removes all items from the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.
+            </summary>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.Contains(`0)">
+            <summary>
+            Determines whether the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> contains the specified
+            item.
+            </summary>
+            <param name="item">The item to locate in the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</param>
+            <returns>true if the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/> contains the item; otherwise, false.</returns>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.TryRemove(`0)">
+            <summary>
+            Attempts to remove the item from the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.
+            </summary>
+            <param name="item">The item to remove.</param>
+            <returns>true if an item was removed successfully; otherwise, false.</returns>
+        </member>
+        <member name="M:ConcurrentCollections.ConcurrentHashSet`1.GetEnumerator">
+            <summary>Returns an enumerator that iterates through the <see
+            cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</summary>
+            <returns>An enumerator for the <see cref="T:ConcurrentCollections.ConcurrentHashSet`1"/>.</returns>
+            <remarks>
+            The enumerator returned from the collection is safe to use concurrently with
+            reads and writes to the collection, however it does not represent a moment-in-time snapshot
+            of the collection.  The contents exposed through the enumerator may contain modifications
+            made to the collection after <see cref="M:ConcurrentCollections.ConcurrentHashSet`1.GetEnumerator"/> was called.
+            </remarks>
+        </member>
+    </members>
+</doc>

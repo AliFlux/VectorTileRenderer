@@ -1,0 +1,44 @@
+﻿<Window x:Class="Demo.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Demo.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.Resources>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Margin" Value="0,3,0,3"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Image Name="demoImage" RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" UseLayoutRounding="True" SnapsToDevicePixels="True"></Image>
+        </ScrollViewer>
+
+        <Grid Background="sc#0.2,1,1,1" HorizontalAlignment="Left" Width="291" VerticalAlignment="Center">
+
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,0,20">
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichMbTilesBasicStyle" IsChecked="True">Zurich - mbtiles - basic style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichMbTilesLibertyStyle">Zurich - mbtiles - liberty style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichMbTilesBrightStyle">Zurich - mbtiles - bright style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichMbTilesDarkStyle">Zurich - mbtiles - dark style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichPbfBasicStyle">Zurich - pbf - basic style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="islamabadMbTilesBrightStyle">Islamabad - mbtiles - bright style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="islamabadMbTilesLightStyle">Islamabad - mbtiles - light style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="islamabadScalePbfBasicStyle">Islamabad 2x - pbf - basic style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="islamabadSizePbfBasicStyle">Islamabad 1024px - pbf - basic style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="newyorkPbfMbStreetsStyle">New York - pbf(mapbox) - streets style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="newyorkPbfMbRunnerStyle">New York - pbf(mapbox) - runner style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichMbTilesHybridStyle">Zurich - mbtiles pbf - hybrid style</RadioButton>
+                <RadioButton Checked="RadioButton_Checked" GroupName="styleSelectorGroup" Tag="zurichOverzoomedMbTilesBasicStyle">Zurich overzoomed - mbtiles pbf - basic style</RadioButton>
+            </StackPanel>
+
+        </Grid>
+
+
+        <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="10,5" Width="100" Margin="10" Click="saveButton_Click">Save</Button>
+
+    </Grid>
+</Window>

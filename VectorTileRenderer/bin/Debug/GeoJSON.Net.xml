@@ -1,0 +1,1465 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GeoJSON.Net</name>
+    </assembly>
+    <members>
+        <member name="T:GeoJSON.Net.Converters.CrsConverter">
+            <summary>
+            Converts <see cref="T:GeoJSON.Net.CoordinateReferenceSystem.ICRSObject"/> types to and from JSON.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.CrsConverter.CanConvert(System.Type)">
+            <summary>
+            Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+            <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.CrsConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+            The object value.
+            </returns>
+            <exception cref="T:Newtonsoft.Json.JsonReaderException">
+            CRS must be null or a json object
+                or
+            CRS must have a "type" property
+            </exception>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.CrsConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.GeoJsonConverter">
+            <summary>
+            Converts <see cref="T:GeoJSON.Net.IGeoJSONObject"/> types to and from JSON.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeoJsonConverter.CanConvert(System.Type)">
+            <summary>
+                Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+                <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeoJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+                The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeoJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeoJsonConverter.ReadGeoJson(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Reads the geo json.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+            <exception cref="T:Newtonsoft.Json.JsonReaderException">
+            json must contain a "type" property
+            or
+            type must be a valid geojson object type
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            Unknown geoJsonType {geoJsonType}
+            </exception>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.GeometryConverter">
+            <summary>
+            Converts <see cref="T:GeoJSON.Net.Geometry.IGeometryObject"/> types to and from JSON.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeometryConverter.CanConvert(System.Type)">
+            <summary>
+                Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+                <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeometryConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+                The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeometryConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.GeometryConverter.ReadGeoJson(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Reads the geo json.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+            <exception cref="T:Newtonsoft.Json.JsonReaderException">
+            json must contain a "type" property
+            or
+            type must be a valid geojson geometry object type
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            Feature and FeatureCollection types are Feature objects and not Geometry objects
+            </exception>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.MultiPointConverter">
+            <summary>
+            Converter to read and write the <see cref="T:GeoJSON.Net.Geometry.MultiPoint" /> type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPointConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc />
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPointConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc />
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPointConverter.CanConvert(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="T:GeoJSON.Net.Converters.MultiPolygonConverter">
+            <summary>
+            Converter to read and write the <see cref="T:GeoJSON.Net.Geometry.MultiPolygon" /> type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPolygonConverter.CanConvert(System.Type)">
+            <summary>
+                Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+                <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPolygonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+                The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.MultiPolygonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.PointConverter">
+            <summary>
+                Converter to read and write the <see cref="T:GeoJSON.Net.Geometry.Point" /> type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PointConverter.CanConvert(System.Type)">
+            <summary>
+                Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+                <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PointConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+                The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PointConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.LineStringConverter">
+            <summary>
+            Converter to read and write the <see cref="T:GeoJSON.Net.Geometry.LineString" /> type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.LineStringConverter.CanConvert(System.Type)">
+            <summary>
+                Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+                <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.LineStringConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+                The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.LineStringConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+                Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="T:GeoJSON.Net.Converters.PolygonConverter">
+            <summary>
+            Converter to read and write the <see cref="T:GeoJSON.Net.Geometry.Polygon" /> type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PolygonConverter.CanConvert(System.Type)">
+            <summary>
+            Determines whether this instance can convert the specified object type.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns>
+            <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PolygonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Reads the JSON representation of the object.
+            </summary>
+            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader" /> to read from.</param>
+            <param name="objectType">Type of the object.</param>
+            <param name="existingValue">The existing value of object being read.</param>
+            <param name="serializer">The calling serializer.</param>
+            <returns>
+            The object value.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Converters.PolygonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Writes the JSON representation of the object.
+            </summary>
+            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter" /> to write to.</param>
+            <param name="value">The value.</param>
+            <param name="serializer">The calling serializer.</param>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.DefaultCRS">
+            <summary>
+            The default CRS is a geographic coordinate reference system,
+            using the WGS84 datum, and with longitude and latitude units of decimal degrees.
+            see https://tools.ietf.org/html/rfc7946#section-4
+            </summary>
+            <remarks>
+            Defines the GeoJSON Coordinate Reference System Objects (CRS) types originally defined in the geojson.org v1.0 spec
+            see http://geojson.org/geojson-spec.html#coordinate-reference-system-objects.
+            The current RFC removes the CRS type, but allows to be left in for backwards compatibility. See https://tools.ietf.org/html/rfc7946#section-4
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.DefaultCRS.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.CoordinateReferenceSystem.DefaultCRS" /> class.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.CoordinateReferenceSystem.DefaultCRS.Instance">
+            <summary>
+            Gets the instance.
+            </summary>
+            <value>
+            The instance.
+            </value>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.LinkedCRS">
+            <summary>
+            Defines the Linked CRS type.
+            </summary>
+            <remarks>
+            This was originally defined in the spec http://geojson.org/geojson-spec.html#named-crs
+            The current RFC removes the CRS type, but allows to be left in for backwards compatibility. 
+            See https://tools.ietf.org/html/rfc7946#section-4
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.LinkedCRS.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.CoordinateReferenceSystem.LinkedCRS" /> class.
+            </summary>
+            <param name="href">
+            The mandatory href member must be a dereferenceable URI.
+            </param>
+            <param name="type">
+            The optional type member will be put in the properties Dictionary
+            </param>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.LinkedCRS.#ctor(System.Uri,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.CoordinateReferenceSystem.LinkedCRS" /> class.
+            </summary>
+            <param name="href">
+            The mandatory href member must be a dereferenceable URI.
+            </param>
+            <param name="type">
+            The optional type member will be put in the properties Dictionary
+            </param>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.CRSBase">
+            <summary>
+            Base class for all IGeometryObject implementing types
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.Properties">
+            <summary>
+            Gets the properties.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.Type">
+            <summary>
+            Gets the type of the GeometryObject object.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.Equals(GeoJSON.Net.CoordinateReferenceSystem.CRSBase)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.Equals(GeoJSON.Net.CoordinateReferenceSystem.CRSBase,GeoJSON.Net.CoordinateReferenceSystem.CRSBase)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.op_Equality(GeoJSON.Net.CoordinateReferenceSystem.CRSBase,GeoJSON.Net.CoordinateReferenceSystem.CRSBase)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.op_Inequality(GeoJSON.Net.CoordinateReferenceSystem.CRSBase,GeoJSON.Net.CoordinateReferenceSystem.CRSBase)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.CRSBase.GetHashCode(GeoJSON.Net.CoordinateReferenceSystem.CRSBase)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.CRSType">
+            <summary>
+            Defines the GeoJSON Coordinate Reference System Objects (CRS) types as originally defined in the geojson.org v1.0 spec
+            </summary>
+            <remarks>
+            Originally defined http://geojson.org/geojson-spec.html#coordinate-reference-system-objects
+            The current RFC removes the CRS type, but allows to be left in for backwards compatibility. See https://tools.ietf.org/html/rfc7946#section-4
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.CoordinateReferenceSystem.CRSType.Unspecified">
+            <summary>
+            Defines a CRS type where the CRS cannot be assumed
+            </summary>
+        </member>
+        <member name="F:GeoJSON.Net.CoordinateReferenceSystem.CRSType.Name">
+            <summary>
+            Defines the Named CRS type.
+            </summary>
+        </member>
+        <member name="F:GeoJSON.Net.CoordinateReferenceSystem.CRSType.Link">
+            <summary>
+            Defines the Linked CRS type.
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.ICRSObject">
+            <summary>
+            Base Interface for CRSBase Object types.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.CoordinateReferenceSystem.ICRSObject.Type">
+            <summary>
+            Gets the CRS type.
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.NamedCRS">
+            <summary>
+            Defines the Named CRS type. 
+            </summary>
+            <remarks>
+            See http://geojson.org/geojson-spec.html#named-crs
+            The current RFC removes the CRS type, but allows to be left in for backwards compatibility.
+            See https://tools.ietf.org/html/rfc7946#section-4
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.NamedCRS.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.CoordinateReferenceSystem.NamedCRS" /> class.
+            </summary>
+            <param name="name">
+            The mandatory name member must be a string identifying a coordinate reference system. OGC CRS URNs such as
+            'urn:ogc:def:crs:OGC:1.3:CRS84' shall be preferred over legacy identifiers such as 'EPSG:4326'.
+            </param>
+        </member>
+        <member name="T:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS">
+            <summary>
+            Represents an unspecified Coordinate Reference System 
+            i.e. where a geojson object has a null crs
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.Type">
+            <summary>
+            Gets the CRS type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.Equals(GeoJSON.Net.CoordinateReferenceSystem.ICRSObject)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.op_Equality(GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS,GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.op_Inequality(GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS,GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.CoordinateReferenceSystem.UnspecifiedCRS.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.DoubleTenDecimalPlaceComparer">
+            <summary>
+                Compares doubles for equality.
+            </summary>
+            <remarks>
+                10 decimal places equates to accuracy to 11.1 μm.
+            </remarks>
+        </member>
+        <member name="T:GeoJSON.Net.GeoJSONObject">
+            <summary>
+                Base class for all IGeometryObject implementing types
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.GeoJSONObject.BoundingBoxes">
+            <summary>
+                Gets or sets the (optional)
+                <see cref="!:https://tools.ietf.org/html/rfc7946#section-5">Bounding Boxes</see>.
+            </summary>
+            <value>
+                The value of <see cref="P:GeoJSON.Net.GeoJSONObject.BoundingBoxes" /> must be a 2*n array where n is the number of dimensions represented in
+                the
+                contained geometries, with the lowest values for all axes followed by the highest values.
+                The axes order of a bbox follows the axes order of geometries.
+                In addition, the coordinate reference system for the bbox is assumed to match the coordinate reference
+                system of the GeoJSON object of which it is a member.
+            </value>
+        </member>
+        <member name="P:GeoJSON.Net.GeoJSONObject.CRS">
+            <summary>
+                Gets or sets the (optional)
+                <see cref="!:https://tools.ietf.org/html/rfc7946#section-4">
+                    Coordinate Reference System
+                    Object.
+                </see>
+            </summary>
+            <value>
+                The Coordinate Reference System Objects.
+            </value>
+        </member>
+        <member name="P:GeoJSON.Net.GeoJSONObject.Type">
+            <summary>
+                Gets the (mandatory) type of the
+                <see cref="!:https://tools.ietf.org/html/rfc7946#section-3">GeoJSON Object</see>.
+            </summary>
+            <value>
+                The type of the object.
+            </value>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Called when [deserialized].
+            </summary>
+            <param name="streamingContext">The streaming context.</param>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.OnSerialized(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Called when [serialized].
+            </summary>
+            <param name="streamingContext">The streaming context.</param>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.OnSerializing(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Called when [serializing].
+            </summary>
+            <param name="streamingContext">The streaming context.</param>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.Equals(GeoJSON.Net.GeoJSONObject)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.Equals(GeoJSON.Net.GeoJSONObject,GeoJSON.Net.GeoJSONObject)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.op_Equality(GeoJSON.Net.GeoJSONObject,GeoJSON.Net.GeoJSONObject)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.op_Inequality(GeoJSON.Net.GeoJSONObject,GeoJSON.Net.GeoJSONObject)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.GeoJSONObject.GetHashCode(GeoJSON.Net.GeoJSONObject)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.GeometryCollection">
+            <summary>
+            Defines the GeometryCollection type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.8
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.GeometryCollection" /> class.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.#ctor(System.Collections.Generic.List{GeoJSON.Net.Geometry.IGeometryObject})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.GeometryCollection" /> class.
+            </summary>
+            <param name="geometries">The geometries contained in this GeometryCollection.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.GeometryCollection.Geometries">
+            <summary>
+            Gets the list of Polygons enclosed in this MultiPolygon.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.Equals(GeoJSON.Net.Geometry.GeometryCollection)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.Equals(GeoJSON.Net.Geometry.GeometryCollection,GeoJSON.Net.Geometry.GeometryCollection)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.op_Equality(GeoJSON.Net.Geometry.GeometryCollection,GeoJSON.Net.Geometry.GeometryCollection)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.op_Inequality(GeoJSON.Net.Geometry.GeometryCollection,GeoJSON.Net.Geometry.GeometryCollection)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeometryCollection.GetHashCode(GeoJSON.Net.Geometry.GeometryCollection)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.ProjectedPosition">
+            <summary>
+            Defines the Projected Position type a.k.a. Projected Coordinate Reference System.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.ProjectedPosition.#ctor(System.Double,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.ProjectedPosition"/> class.
+            </summary>
+            <param name="easting">The easting.</param>
+            <param name="northing">The northing.</param>
+            <param name="altitude">The altitude in m(eter).</param>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.ProjectedPosition.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.ProjectedPosition"/> class.
+            </summary>
+            <param name="easting">The easting, e.g. '38.889722'.</param>
+            <param name="northing">The northing, e.g. '-77.008889'.</param>
+            <param name="altitude">The altitude in m(eter).</param>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.ProjectedPosition.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:GeoJSON.Net.Geometry.ProjectedPosition"/> class from being created.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.ProjectedPosition.Easting">
+            <summary>
+            Gets the easting.
+            </summary>
+            <value>The easting.</value>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.ProjectedPosition.Northing">
+            <summary>
+            Gets the northing.
+            </summary>
+            <value>The northing.</value>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.ProjectedPosition.Altitude">
+            <summary>
+            Gets the altitude.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.ProjectedPosition.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.IPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.MultiLineString">
+            <summary>
+            Defines the MultiLineString type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.5
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.#ctor(System.Collections.Generic.List{GeoJSON.Net.Geometry.LineString})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.MultiLineString" /> class.
+            </summary>
+            <param name="coordinates">The coordinates.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.MultiLineString.Coordinates">
+            <summary>
+            Gets the Coordinates.
+            </summary>
+            <value>The Coordinates.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.Equals(GeoJSON.Net.Geometry.MultiLineString)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.Equals(GeoJSON.Net.Geometry.MultiLineString,GeoJSON.Net.Geometry.MultiLineString)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.op_Equality(GeoJSON.Net.Geometry.MultiLineString,GeoJSON.Net.Geometry.MultiLineString)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.op_Inequality(GeoJSON.Net.Geometry.MultiLineString,GeoJSON.Net.Geometry.MultiLineString)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiLineString.GetHashCode(GeoJSON.Net.Geometry.MultiLineString)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.LineString">
+            <summary>
+            Defines the LineString type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.4
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.#ctor">
+            <summary>
+            LineString
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.#ctor(System.Collections.Generic.IEnumerable{GeoJSON.Net.Geometry.IPosition})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.LineString" /> class.
+            </summary>
+            <param name="coordinates">The coordinates.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.LineString.Coordinates">
+            <summary>
+            Gets the Positions.
+            </summary>
+            <value>The Positions.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.IsClosed">
+            <summary>
+            Determines whether this instance has its first and last coordinate at the same position and thereby is closed.
+            </summary>
+            <returns>
+            <c>true</c> if this instance is closed; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.IsLinearRing">
+            <summary>
+            Determines whether this LineString is a LinearRing.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.1
+            </remarks>
+            <returns>
+            <c>true</c> if it is a linear ring; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.Equals(GeoJSON.Net.Geometry.LineString)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.Equals(GeoJSON.Net.Geometry.LineString,GeoJSON.Net.Geometry.LineString)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.op_Equality(GeoJSON.Net.Geometry.LineString,GeoJSON.Net.Geometry.LineString)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.op_Inequality(GeoJSON.Net.Geometry.LineString,GeoJSON.Net.Geometry.LineString)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.LineString.GetHashCode(GeoJSON.Net.Geometry.LineString)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.MultiPoint">
+            <summary>
+            Contains an array of <see cref="T:GeoJSON.Net.Geometry.Point" />.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.3
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.#ctor(System.Collections.Generic.List{GeoJSON.Net.Geometry.Point})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.MultiPoint" /> class.
+            </summary>
+            <param name="coordinates">The coordinates.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.MultiPoint.Coordinates">
+            <summary>
+            Gets the Coordinates.
+            </summary>
+            <value>The Coordinates.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.Equals(GeoJSON.Net.Geometry.MultiPoint)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.Equals(GeoJSON.Net.Geometry.MultiPoint,GeoJSON.Net.Geometry.MultiPoint)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.op_Equality(GeoJSON.Net.Geometry.MultiPoint,GeoJSON.Net.Geometry.MultiPoint)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.op_Inequality(GeoJSON.Net.Geometry.MultiPoint,GeoJSON.Net.Geometry.MultiPoint)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPoint.GetHashCode(GeoJSON.Net.Geometry.MultiPoint)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.GeographicPosition">
+            <summary>
+            Defines the Geographic Position type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.1
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.#ctor(System.Double,System.Double,System.Nullable{System.Double})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.GeographicPosition" /> class.
+            </summary>
+            <param name="latitude">The latitude.</param>
+            <param name="longitude">The longitude.</param>
+            <param name="altitude">The altitude in m(eter).</param>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.GeographicPosition" /> class.
+            </summary>
+            <param name="latitude">The latitude, e.g. '38.889722'.</param>
+            <param name="longitude">The longitude, e.g. '-77.008889'.</param>
+            <param name="altitude">The altitude in m(eters).</param>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:GeoJSON.Net.Geometry.GeographicPosition" /> class from being created.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.GeographicPosition.Altitude">
+            <summary>
+            Gets the altitude.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.GeographicPosition.Latitude">
+            <summary>
+            Gets the latitude.
+            </summary>
+            <value>The latitude.</value>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.GeographicPosition.Longitude">
+            <summary>
+            Gets the longitude.
+            </summary>
+            <value>The longitude.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.Equals(GeoJSON.Net.Geometry.GeographicPosition)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.Equals(GeoJSON.Net.Geometry.GeographicPosition,GeoJSON.Net.Geometry.GeographicPosition)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.op_Equality(GeoJSON.Net.Geometry.GeographicPosition,GeoJSON.Net.Geometry.GeographicPosition)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.op_Inequality(GeoJSON.Net.Geometry.GeographicPosition,GeoJSON.Net.Geometry.GeographicPosition)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.GeographicPosition.GetHashCode(GeoJSON.Net.Geometry.GeographicPosition)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.IGeometryObject">
+            <summary>
+            Base Interface for GeometryObject types.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.IGeometryObject.Type">
+            <summary>
+            Gets the (mandatory) type of the GeoJSON Object.
+            However, for GeoJSON Objects only the 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 
+            'Polygon', 'MultiPolygon', or 'GeometryCollection' types are allowed.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1
+            </remarks>
+            <value>
+            The type of the object.
+            </value>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.MultiPolygon">
+            <summary>
+            Defines the MultiPolygon type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.7
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.#ctor">
+            <summary>
+            MultiPolygon
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.#ctor(System.Collections.Generic.List{GeoJSON.Net.Geometry.Polygon})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.MultiPolygon" /> class.
+            </summary>
+            <param name="polygons">The polygons contained in this MultiPolygon.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.MultiPolygon.Coordinates">
+            <summary>
+            Gets the list of Polygons enclosed in this MultiPolygon.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.Equals(GeoJSON.Net.Geometry.MultiPolygon)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.Equals(GeoJSON.Net.Geometry.MultiPolygon,GeoJSON.Net.Geometry.MultiPolygon)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.op_Equality(GeoJSON.Net.Geometry.MultiPolygon,GeoJSON.Net.Geometry.MultiPolygon)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.op_Inequality(GeoJSON.Net.Geometry.MultiPolygon,GeoJSON.Net.Geometry.MultiPolygon)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.MultiPolygon.GetHashCode(GeoJSON.Net.Geometry.MultiPolygon)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.Point">
+            <summary>
+            Defines the Point type.
+            In geography, a point refers to a Position on a map, expressed in latitude and longitude.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.2
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.#ctor(GeoJSON.Net.Geometry.IPosition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.Point" /> class.
+            </summary>
+            <param name="coordinates">The Position.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.Point.Coordinates">
+            <summary>
+            Gets or sets the Coordinate(s).
+            </summary>
+            <value>The Coordinates.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.Equals(GeoJSON.Net.Geometry.Point)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.Equals(GeoJSON.Net.Geometry.Point,GeoJSON.Net.Geometry.Point)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.op_Equality(GeoJSON.Net.Geometry.Point,GeoJSON.Net.Geometry.Point)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.op_Inequality(GeoJSON.Net.Geometry.Point,GeoJSON.Net.Geometry.Point)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Point.GetHashCode(GeoJSON.Net.Geometry.Point)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.Polygon">
+            <summary>
+            Defines the Polygon type.
+            Coordinates of a Polygon are a list of linear rings coordinate arrays. The first element in 
+            the array represents the exterior ring. Any subsequent elements represent interior rings (or holes).
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.6
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.#ctor(System.Collections.Generic.List{GeoJSON.Net.Geometry.LineString})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Geometry.Polygon" /> class.
+            </summary>
+            <param name="coordinates">
+            The linear rings with the first element in the array representing the exterior ring. 
+            Any subsequent elements represent interior rings (or holes).
+            </param>
+        </member>
+        <member name="P:GeoJSON.Net.Geometry.Polygon.Coordinates">
+            <summary>
+            Gets the list of points outlining this Polygon.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.Equals(GeoJSON.Net.Geometry.Polygon)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.Equals(GeoJSON.Net.Geometry.Polygon,GeoJSON.Net.Geometry.Polygon)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.op_Equality(GeoJSON.Net.Geometry.Polygon,GeoJSON.Net.Geometry.Polygon)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.op_Inequality(GeoJSON.Net.Geometry.Polygon,GeoJSON.Net.Geometry.Polygon)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Geometry.Polygon.GetHashCode(GeoJSON.Net.Geometry.Polygon)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Geometry.Position">
+            <summary>
+            A position is the fundamental geometry construct. 
+            The "coordinates" member of a geometry object is composed of one position (in the case of a Point geometry)
+            , an array of positions (LineString or MultiPoint geometries), 
+            an array of arrays of positions (Polygons, MultiLineStrings), 
+            or a multidimensional array of positions (MultiPolygon).
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.GeoJSONObjectType">
+            <summary>
+            Defines the GeoJSON Objects types.
+            </summary>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.Point">
+            <summary>
+            Defines the Point type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.2
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.MultiPoint">
+            <summary>
+            Defines the MultiPoint type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.3
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.LineString">
+            <summary>
+            Defines the LineString type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.4
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.MultiLineString">
+            <summary>
+            Defines the MultiLineString type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.5
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.Polygon">
+            <summary>
+            Defines the Polygon type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.6
+            </remarks> 
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.MultiPolygon">
+            <summary>
+            Defines the MultiPolygon type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.7
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.GeometryCollection">
+            <summary>
+            Defines the GeometryCollection type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.1.8
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.Feature">
+            <summary>
+            Defines the Feature type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.2
+            </remarks>
+        </member>
+        <member name="F:GeoJSON.Net.GeoJSONObjectType.FeatureCollection">
+            <summary>
+            Defines the FeatureCollection type.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.3
+            </remarks>
+        </member>
+        <member name="T:GeoJSON.Net.Exceptions.ParsingException">
+            <summary>
+            Exception raised when response from SimpleGeo API cannot be parsed
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Exceptions.ParsingException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Exceptions.ParsingException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="T:GeoJSON.Net.Feature.Feature">
+            <summary>
+            A GeoJSON Feature Object.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3.2
+            </remarks>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.#ctor(GeoJSON.Net.Geometry.IGeometryObject,System.Collections.Generic.Dictionary{System.String,System.Object},System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Feature.Feature" /> class.
+            </summary>
+            <param name="geometry">The Geometry Object.</param>
+            <param name="properties">The properties.</param>
+            <param name="id">The (optional) identifier.</param>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.#ctor(GeoJSON.Net.Geometry.IGeometryObject,System.Object,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Feature.Feature" /> class.
+            </summary>
+            <param name="geometry">The Geometry Object.</param>
+            <param name="properties">
+            Class used to fill feature properties. Any public member will be added to feature
+            properties
+            </param>
+            <param name="id">The (optional) identifier.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Feature.Feature.Geometry">
+            <summary>
+            Gets or sets the geometry.
+            </summary>
+            <value>
+            The geometry.
+            </value>
+        </member>
+        <member name="P:GeoJSON.Net.Feature.Feature.Id">
+            <summary>
+                Gets or sets the id.
+            </summary>
+            <value>The handle.</value>
+        </member>
+        <member name="P:GeoJSON.Net.Feature.Feature.Properties">
+            <summary>
+            Gets the properties.
+            </summary>
+            <value>The properties.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.Equals(GeoJSON.Net.Feature.Feature)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.Equals(GeoJSON.Net.Feature.Feature,GeoJSON.Net.Feature.Feature)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.op_Equality(GeoJSON.Net.Feature.Feature,GeoJSON.Net.Feature.Feature)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.op_Inequality(GeoJSON.Net.Feature.Feature,GeoJSON.Net.Feature.Feature)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.Feature.GetHashCode(GeoJSON.Net.Feature.Feature)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.Feature.FeatureCollection">
+            <summary>
+            Defines the FeatureCollection type.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Feature.FeatureCollection" /> class.
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.#ctor(System.Collections.Generic.List{GeoJSON.Net.Feature.Feature})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GeoJSON.Net.Feature.FeatureCollection" /> class.
+            </summary>
+            <param name="features">The features.</param>
+        </member>
+        <member name="P:GeoJSON.Net.Feature.FeatureCollection.Features">
+            <summary>
+            Gets the features.
+            </summary>
+            <value>The features.</value>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.Equals(GeoJSON.Net.Feature.FeatureCollection)">
+            <summary>
+            Determines whether the specified object is equal to the current object
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.Equals(GeoJSON.Net.Feature.FeatureCollection,GeoJSON.Net.Feature.FeatureCollection)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.op_Equality(GeoJSON.Net.Feature.FeatureCollection,GeoJSON.Net.Feature.FeatureCollection)">
+            <summary>
+            Determines whether the specified object instances are considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.op_Inequality(GeoJSON.Net.Feature.FeatureCollection,GeoJSON.Net.Feature.FeatureCollection)">
+            <summary>
+            Determines whether the specified object instances are not considered equal
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.GetHashCode">
+            <summary>
+            Returns the hash code for this instance
+            </summary>
+        </member>
+        <member name="M:GeoJSON.Net.Feature.FeatureCollection.GetHashCode(GeoJSON.Net.Feature.FeatureCollection)">
+            <summary>
+            Returns the hash code for the specified object
+            </summary>
+        </member>
+        <member name="T:GeoJSON.Net.IGeoJSONObject">
+            <summary>
+            Base Interface for GeoJSONObject types.
+            </summary>
+        </member>
+        <member name="P:GeoJSON.Net.IGeoJSONObject.Type">
+            <summary>
+            Gets the (mandatory) type of the GeoJSON Object.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-3
+            </remarks>
+            <value>
+            The type of the object.
+            </value>
+        </member>
+        <member name="P:GeoJSON.Net.IGeoJSONObject.CRS">
+            <summary>
+            Gets the (optional) Coordinate Reference System Object.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-4
+            </remarks>
+            <value>
+            The Coordinate Reference System Objects.
+            </value>
+        </member>
+        <member name="P:GeoJSON.Net.IGeoJSONObject.BoundingBoxes">
+            <summary>
+            Gets or sets the (optional) Bounding Boxes.
+            </summary>
+            <remarks>
+            See https://tools.ietf.org/html/rfc7946#section-5
+            </remarks>
+            <value>
+            The value of the bbox member must be a 2*n array where n is the number of dimensions represented in the
+            contained geometries, with the lowest values for all axes followed by the highest values.
+            The axes order of a bbox follows the axes order of geometries.
+            In addition, the coordinate reference system for the bbox is assumed to match the coordinate reference
+            system of the GeoJSON object of which it is a member.
+            </value>
+        </member>
+        <member name="T:GeoJSON.Net.NullableDoubleTenDecimalPlaceComparer">
+            <summary>
+                Compares nullable doubles for equality.
+            </summary>
+            <remarks>
+                10 decimal places equates to accuracy to 11.1 μm.
+            </remarks>
+        </member>
+    </members>
+</doc>

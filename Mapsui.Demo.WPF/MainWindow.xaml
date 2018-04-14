@@ -1,0 +1,26 @@
+﻿<Window x:Class="Mapsui.Demo.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:xaml="clr-namespace:Mapsui.UI.Wpf;assembly=Mapsui.UI.Wpf"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mapsui.Demo.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Grid>
+
+        <xaml:MapControl Name="MyMapControl"></xaml:MapControl>
+
+        <Grid VerticalAlignment="Top" Height="40" Background="sc#0.3,1,1,1">
+            <ComboBox VerticalAlignment="Top" HorizontalAlignment="Right" Width="206" Margin="40,10,40,0" SelectedIndex="0" Name="styleBox" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Tag="basic">Basic</ComboBoxItem>
+                <ComboBoxItem Tag="bright">Bright</ComboBoxItem>
+                <ComboBoxItem Tag="dark">Dark</ComboBoxItem>
+                <ComboBoxItem Tag="light">Light</ComboBoxItem>
+                <ComboBoxItem Tag="liberty">Liberty</ComboBoxItem>
+                <ComboBoxItem Tag="hybrid">Hybrid w/o satellite</ComboBoxItem>
+            </ComboBox>
+        </Grid>
+
+    </Grid>
+</Window>

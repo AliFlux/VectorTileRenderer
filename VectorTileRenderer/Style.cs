@@ -993,6 +993,11 @@ namespace VectorTileRenderer
                     var minZoom = pointStops.First().Item1;
                     var maxZoom = pointStops.Last().Item1;
                     double power = 1;
+
+                    if (minZoom == 5 && maxZoom == 10)
+                    {
+
+                    }
                     
                     double zoomA = minZoom;
                     double zoomB = maxZoom;

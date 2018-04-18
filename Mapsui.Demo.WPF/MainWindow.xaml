@@ -14,6 +14,7 @@
         <Grid VerticalAlignment="Top" Height="40" Background="sc#0.3,1,1,1">
             <ComboBox VerticalAlignment="Top" HorizontalAlignment="Right" Width="206" Margin="40,10,40,0" SelectedIndex="0" Name="styleBox" SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBoxItem Tag="basic">Basic</ComboBoxItem>
+                <ComboBoxItem Tag="aliflux">AliFlux</ComboBoxItem>
                 <ComboBoxItem Tag="bright">Bright</ComboBoxItem>
                 <ComboBoxItem Tag="dark">Dark</ComboBoxItem>
                 <ComboBoxItem Tag="light">Light</ComboBoxItem>

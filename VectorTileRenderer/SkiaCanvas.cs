@@ -17,11 +17,13 @@ namespace VectorTileRenderer
     {
         int width;
         int height;
-
-        //SKBitmap skBitmap;
+        
         WriteableBitmap bitmap;
         SKSurface surface;
         SKCanvas canvas;
+
+        private GRContext grContext;
+        GRBackendRenderTargetDesc renderTarget;
 
         public bool ClipOverflow { get; set; } = false;
         private Rect clipRectangle;
@@ -39,7 +41,16 @@ namespace VectorTileRenderer
             bitmap.Lock();
             var info = new SKImageInfo(this.width, this.height, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
 
+            //var glInterface = GRGlInterface.CreateNativeGlInterface();
+            //grContext = GRContext.Create(GRBackend.OpenGL, glInterface);
+
+            //renderTarget = SkiaGL.CreateRenderTarget();
+            //renderTarget.Width = this.width;
+            //renderTarget.Height = this.height;
+
+
             surface = SKSurface.Create(info, bitmap.BackBuffer, bitmap.BackBufferStride);
+            //surface = SKSurface.Create(grContext, renderTarget);
             canvas = surface.Canvas;
 
             double padding = -5;
@@ -111,6 +122,11 @@ namespace VectorTileRenderer
         //    }
         //    return sum / 2;
         //}
+
+        double clamp(double number, double min = 0, double max = 1)
+        {
+            return Math.Max(min, Math.Min(max, number));
+        }
 
         List<Point> clipPolygon(List<Point> geometry)
         {
@@ -187,7 +203,7 @@ namespace VectorTileRenderer
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = convertCap(style.Paint.LineCap),
                 StrokeWidth = (float)style.Paint.LineWidth,
-                Color = new SKColor(style.Paint.LineColor.R, style.Paint.LineColor.G, style.Paint.LineColor.B, (byte)(style.Paint.LineColor.A * style.Paint.LineOpacity)),
+                Color = new SKColor(style.Paint.LineColor.R, style.Paint.LineColor.G, style.Paint.LineColor.B, (byte)clamp(style.Paint.LineColor.A * style.Paint.LineOpacity, 0, 255)),
                 IsAntialias = true,
             };
 
@@ -226,7 +242,7 @@ namespace VectorTileRenderer
             {
                 IsStroke = true,
                 StrokeWidth = (float)style.Paint.TextStrokeWidth,
-                Color = new SKColor(style.Paint.TextStrokeColor.R, style.Paint.TextStrokeColor.G, style.Paint.TextStrokeColor.B, (byte)(style.Paint.TextStrokeColor.A * style.Paint.TextOpacity)),
+                Color = new SKColor(style.Paint.TextStrokeColor.R, style.Paint.TextStrokeColor.G, style.Paint.TextStrokeColor.B, (byte)clamp(style.Paint.TextStrokeColor.A * style.Paint.TextOpacity, 0, 255)),
                 TextSize = (float)style.Paint.TextSize,
                 IsAntialias = true,
                 TextEncoding = SKTextEncoding.Utf32,
@@ -241,7 +257,7 @@ namespace VectorTileRenderer
         {
             var paint = new SKPaint()
             {
-                Color = new SKColor(style.Paint.TextColor.R, style.Paint.TextColor.G, style.Paint.TextColor.B, (byte)(style.Paint.TextColor.A * style.Paint.TextOpacity)),
+                Color = new SKColor(style.Paint.TextColor.R, style.Paint.TextColor.G, style.Paint.TextColor.B, (byte)clamp(style.Paint.TextColor.A * style.Paint.TextOpacity, 0, 255)),
                 TextSize = (float)style.Paint.TextSize,
                 IsAntialias = true,
                 TextEncoding = SKTextEncoding.Utf32,
@@ -521,11 +537,16 @@ namespace VectorTileRenderer
                 return;
             }
 
+            if(style.Paint.FillColor.R == 15)
+            {
+
+            }
+
             SKPaint fillPaint = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
                 StrokeCap = convertCap(style.Paint.LineCap),
-                Color = new SKColor(style.Paint.FillColor.R, style.Paint.FillColor.G, style.Paint.FillColor.B, (byte)(style.Paint.FillColor.A * style.Paint.FillOpacity)),
+                Color = new SKColor(style.Paint.FillColor.R, style.Paint.FillColor.G, style.Paint.FillColor.B, (byte)clamp(style.Paint.FillColor.A * style.Paint.FillOpacity, 0, 255)),
                 IsAntialias = true,
             };
 
@@ -588,12 +609,16 @@ namespace VectorTileRenderer
 
         public BitmapSource FinishDrawing()
         {
+            //surface.Canvas.Flush();
+            //grContext.
+
+
             bitmap.AddDirtyRect(new Int32Rect(0, 0, this.width, this.height));
             bitmap.Unlock();
             bitmap.Freeze();
 
             return bitmap;
-            
+
         }
     }
 }

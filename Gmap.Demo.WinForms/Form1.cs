@@ -34,7 +34,7 @@ namespace Gmap.Demo.WinForms
 
             var mainDir = "../../../";
 
-            var provider = new VectorMbTilesProvider(mainDir + @"tiles/islamabad.mbtiles", mainDir + @"styles/basic-style.json", mainDir + @"tile-cache/");
+            var provider = new VectorMbTilesProvider(mainDir + @"tiles/islamabad.mbtiles", mainDir + @"styles/aliflux-style.json", mainDir + @"tile-cache/");
             gmap.MapProvider = provider;
         }
 

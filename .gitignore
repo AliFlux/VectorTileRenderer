@@ -327,3 +327,6 @@ ASALocalRun/
 
 # Cache
 tile-cache/*
+
+obj/
+bin/

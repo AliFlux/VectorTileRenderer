@@ -330,3 +330,5 @@ tile-cache/*
 
 obj/
 bin/
+debug/
+release/

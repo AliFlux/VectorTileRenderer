@@ -13,7 +13,14 @@
 *.userprefs
 
 # Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
 bld/
+[Bb]in/
 [Oo]bj/
 [Ll]og/
 
@@ -320,15 +327,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-
-# Raw files
-*.psd
-*.pdf
-
-# Cache
-tile-cache/*
-
-obj/
-bin/
-debug/
-release/
+/packages
+/tile-cache

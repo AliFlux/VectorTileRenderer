@@ -1,10 +1,6 @@
 ﻿using BruTile;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using VectorTileRenderer;
 
@@ -47,19 +43,19 @@ namespace Mapsui.Demo.WPF
             return GetBytesFromBitmapSource(bitmapSource);
         }
 
-        static byte[] GetBytesFromBitmapSource(System.Windows.Media.Imaging.BitmapSource bmp)
+        static byte[] GetBytesFromBitmapSource(BitmapSource bmp)
         {
             if(bmp == null)
             {
                 return null;
             }
 
-            System.Windows.Media.Imaging.PngBitmapEncoder encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+            var encoder = new PngBitmapEncoder();
             //encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
             // byte[] bit = new byte[0];
             using (MemoryStream stream = new MemoryStream())
             {
-                encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
+                encoder.Frames.Add(BitmapFrame.Create(bmp));
                 encoder.Save(stream);
                 byte[] bit = stream.ToArray();
                 stream.Close();

@@ -35,7 +35,7 @@ namespace Mapsui.Demo.WPF
             {
                 bitmapSource = Renderer.RenderCached(cachePath, style, canvas, (int)tileInfo.Index.Col, (int)tileInfo.Index.Row, Convert.ToInt32(tileInfo.Index.Level), 256, 256, 1).Result;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

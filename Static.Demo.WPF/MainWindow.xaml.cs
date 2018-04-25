@@ -160,7 +160,7 @@ namespace Demo.WPF
             Console.WriteLine(elapsedMs + "ms time");
         }
 
-        async void showMbTiles(string path, string stylePath, int minX, int minY, int maxX, int maxY, int zoom, double size = 512, double scale = 1)
+        void showMbTiles(string path, string stylePath, int minX, int minY, int maxX, int maxY, int zoom, double size = 512, double scale = 1)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
 

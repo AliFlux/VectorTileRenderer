@@ -17,7 +17,7 @@ namespace Mapsui.Demo.WPF
         {
             this.cachePath = cachePath;
             style = new Style(stylePath);
-            style.FontFallbackDirectory = @"styles/fonts/";
+            style.FontDirectory = @"styles/fonts/";
 
             provider = new VectorTileRenderer.Sources.MbTilesSource(path);
             style.SetSourceProvider(0, provider);

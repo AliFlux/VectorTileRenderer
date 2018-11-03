@@ -22,7 +22,7 @@ namespace Gmap.Demo.WinForms
         public VectorMbTilesProvider(string path, string stylePath, string cachePath)
         {
             style = new Style(stylePath);
-            style.FontFallbackDirectory = @"styles/fonts/";
+            style.FontDirectory = @"styles/fonts/";
             this.cachePath = cachePath;
 
             provider = new VectorTileRenderer.Sources.MbTilesSource(path);

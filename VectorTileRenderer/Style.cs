@@ -130,7 +130,7 @@ namespace VectorTileRenderer
 
         ConcurrentDictionary<string, Brush[]> brushesCache = new ConcurrentDictionary<string, Brush[]>();
 
-        public string FontFallbackDirectory { get; set; } = null;
+        public string FontDirectory { get; set; } = null;
 
         public Style(string path, double scale = 1)
         {
@@ -161,7 +161,7 @@ namespace VectorTileRenderer
             }
 
             int i = 0;
-            foreach(var jLayer in jObject.layers)
+            foreach (var jLayer in jObject.layers)
             {
                 var layer = new Layer();
                 layer.Index = i;
@@ -227,9 +227,9 @@ namespace VectorTileRenderer
         public void SetSourceProvider(int index, Sources.ITileSource provider)
         {
             int i = 0;
-            foreach(var pair in Sources)
+            foreach (var pair in Sources)
             {
-                if(index == i)
+                if (index == i)
                 {
                     pair.Value.Provider = provider;
                     return;
@@ -245,13 +245,13 @@ namespace VectorTileRenderer
 
         object plainifyJson(JToken token)
         {
-            if(token.Type == JTokenType.Object)
+            if (token.Type == JTokenType.Object)
             {
                 IDictionary<string, JToken> dict = token as JObject;
                 return dict.Select(pair => new KeyValuePair<string, object>(pair.Key, plainifyJson(pair.Value)))
                         .ToDictionary(key => key.Key, value => value.Value);
             }
-            else if(token.Type == JTokenType.Array)
+            else if (token.Type == JTokenType.Array)
             {
                 var array = token as JArray;
                 return array.Select(item => plainifyJson(item)).ToArray();
@@ -284,6 +284,19 @@ namespace VectorTileRenderer
             }
 
             return results.ToArray();
+        }
+
+        public Color GetBackgroundColor(double zoom)
+        {
+            var brushes = GetStyleByType("background", zoom, 1);
+
+            foreach (var brush in brushes)
+            {
+                var newColor = Color.FromArgb((byte)Math.Max(0, Math.Min(255, brush.Paint.BackgroundOpacity * brush.Paint.BackgroundColor.A)), brush.Paint.BackgroundColor.R, brush.Paint.BackgroundColor.G, brush.Paint.BackgroundColor.B);
+                return newColor;
+            }
+
+            return Colors.White;
         }
 
         //public Brush[] GetBrushesCached(double zoom, double scale, string type, string id, Dictionary<string, object> attributes)
@@ -352,10 +365,15 @@ namespace VectorTileRenderer
             var brush = new Brush();
             brush.ZIndex = index;
             brush._layer = layer;
-            brush.GlyphsDirectory = this.FontFallbackDirectory;
+            brush.GlyphsDirectory = this.FontDirectory;
 
             var paint = new Paint();
             brush.Paint = paint;
+
+            if (layer.ID == "country_label")
+            {
+
+            }
 
             if (paintData != null)
             {
@@ -365,51 +383,51 @@ namespace VectorTileRenderer
                 {
                     paint.FillColor = parseColor(getValue(paintData["fill-color"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("background-color"))
                 {
                     paint.BackgroundColor = parseColor(getValue(paintData["background-color"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("text-color"))
                 {
                     paint.TextColor = parseColor(getValue(paintData["text-color"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("line-color"))
                 {
                     paint.LineColor = parseColor(getValue(paintData["line-color"], attributes));
                 }
 
                 // --
-                
+
                 if (paintData.ContainsKey("line-pattern"))
                 {
                     paint.LinePattern = (string)getValue(paintData["line-pattern"], attributes);
                 }
-                
+
                 if (paintData.ContainsKey("background-pattern"))
                 {
                     paint.BackgroundPattern = (string)getValue(paintData["background-pattern"], attributes);
                 }
-                
+
                 if (paintData.ContainsKey("fill-pattern"))
                 {
                     paint.FillPattern = (string)getValue(paintData["fill-pattern"], attributes);
                 }
 
                 // --
-                
+
                 if (paintData.ContainsKey("text-opacity"))
                 {
                     paint.TextOpacity = Convert.ToDouble(getValue(paintData["text-opacity"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("icon-opacity"))
                 {
                     paint.IconOpacity = Convert.ToDouble(getValue(paintData["icon-opacity"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("line-opacity"))
                 {
                     paint.LineOpacity = Convert.ToDouble(getValue(paintData["line-opacity"], attributes));
@@ -419,14 +437,14 @@ namespace VectorTileRenderer
                 {
                     paint.FillOpacity = Convert.ToDouble(getValue(paintData["fill-opacity"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("background-opacity"))
                 {
                     paint.BackgroundOpacity = Convert.ToDouble(getValue(paintData["background-opacity"], attributes));
                 }
 
                 // --
-                
+
                 if (paintData.ContainsKey("line-width"))
                 {
                     paint.LineWidth = Convert.ToDouble(getValue(paintData["line-width"], attributes)) * scale; // * screenScale;
@@ -449,12 +467,12 @@ namespace VectorTileRenderer
                 {
                     paint.TextStrokeColor = parseColor(getValue(paintData["text-halo-color"], attributes));
                 }
-                
+
                 if (paintData.ContainsKey("text-halo-width"))
                 {
                     paint.TextStrokeWidth = Convert.ToDouble(getValue(paintData["text-halo-width"], attributes)) * scale;
                 }
-                
+
                 if (paintData.ContainsKey("text-halo-blur"))
                 {
                     paint.TextStrokeBlur = Convert.ToDouble(getValue(paintData["text-halo-blur"], attributes)) * scale;
@@ -489,12 +507,12 @@ namespace VectorTileRenderer
                         paint.LineCap = PenLineCap.Square;
                     }
                 }
-                
+
                 if (layoutData.ContainsKey("visibility"))
                 {
                     paint.Visibility = ((string)getValue(layoutData["visibility"], attributes)) == "visible";
                 }
-                
+
                 if (layoutData.ContainsKey("text-field"))
                 {
                     brush.TextField = (string)getValue(layoutData["text-field"], attributes);
@@ -511,33 +529,33 @@ namespace VectorTileRenderer
                         return "";
                     }).Trim();
                 }
-                
+
                 if (layoutData.ContainsKey("text-font"))
                 {
                     paint.TextFont = ((object[])getValue(layoutData["text-font"], attributes)).Select(item => (string)item).ToArray();
                 }
-                
+
                 if (layoutData.ContainsKey("text-size"))
                 {
                     paint.TextSize = Convert.ToDouble(getValue(layoutData["text-size"], attributes)) * scale;
                 }
-                
+
                 if (layoutData.ContainsKey("text-max-width"))
                 {
                     paint.TextMaxWidth = Convert.ToDouble(getValue(layoutData["text-max-width"], attributes)) * scale;// * screenScale;
                 }
-                
+
                 if (layoutData.ContainsKey("text-offset"))
                 {
                     var value = (object[])getValue(layoutData["text-offset"], attributes);
                     paint.TextOffset = new Point(Convert.ToDouble(value[0]) * scale, Convert.ToDouble(value[1]) * scale);
                 }
-                
+
                 if (layoutData.ContainsKey("text-optional"))
                 {
                     paint.TextOptional = (bool)(getValue(layoutData["text-optional"], attributes));
                 }
-                
+
                 if (layoutData.ContainsKey("text-transform"))
                 {
                     var value = (string)getValue(layoutData["text-transform"], attributes);
@@ -554,12 +572,12 @@ namespace VectorTileRenderer
                         paint.TextTransform = TextTransform.Lowercase;
                     }
                 }
-                
+
                 if (layoutData.ContainsKey("icon-size"))
                 {
                     paint.IconScale = Convert.ToDouble(getValue(layoutData["icon-size"], attributes)) * scale;
                 }
-                
+
                 if (layoutData.ContainsKey("icon-image"))
                 {
                     paint.IconImage = (string)getValue(layoutData["icon-image"], attributes);
@@ -568,7 +586,7 @@ namespace VectorTileRenderer
                 //Console.WriteLine("layout");
                 //Console.WriteLine(layoutData.ToString());
             }
-            
+
             return brush;
         }
 
@@ -596,7 +614,7 @@ namespace VectorTileRenderer
 
         private Color parseColor(object iColor)
         {
-            if(iColor.GetType() == typeof(Color))
+            if (iColor.GetType() == typeof(Color))
             {
                 return (Color)iColor;
             }
@@ -714,7 +732,7 @@ namespace VectorTileRenderer
         {
             ////Console.WriteLine(layerName);
             List<Layer> result = new List<Layer>();
-            
+
             foreach (var layer in Layers)
             {
                 //if (attributes.ContainsKey("class"))
@@ -724,7 +742,7 @@ namespace VectorTileRenderer
 
                 //    }
                 //}
-                
+
                 if (layer.SourceLayer == layerName)
                 {
                     bool valid = true;
@@ -818,13 +836,14 @@ namespace VectorTileRenderer
 
                     var key = (string)filterArray[1];
 
-                    if(operation == "==")
+                    if (operation == "==")
                     {
                         if (!attributes.ContainsKey(key))
                         {
                             return false;
                         }
-                    } else
+                    }
+                    else
                     {
                         // special case, comparing inequality with non existent attribute
                         if (!attributes.ContainsKey(key))
@@ -833,7 +852,7 @@ namespace VectorTileRenderer
                         }
                     }
 
-                    if(!(attributes[key] is IComparable))
+                    if (!(attributes[key] is IComparable))
                     {
                         throw new NotImplementedException("Comparing colors probably");
                         return false;
@@ -842,13 +861,13 @@ namespace VectorTileRenderer
                     var valueA = (IComparable)attributes[key];
                     var valueB = getValue(filterArray[2], attributes);
 
-                    if(isNumber(valueA) && isNumber(valueB))
+                    if (isNumber(valueA) && isNumber(valueB))
                     {
                         valueA = Convert.ToDouble(valueA);
                         valueB = Convert.ToDouble(valueB);
                     }
 
-                    if(key is string)
+                    if (key is string)
                     {
                         if (key == "capital")
                         {
@@ -949,7 +968,7 @@ namespace VectorTileRenderer
             if (token is string && attributes != null)
             {
                 string value = token as string;
-                if(value.Length == 0)
+                if (value.Length == 0)
                 {
                     return "";
                 }
@@ -993,25 +1012,26 @@ namespace VectorTileRenderer
                     {
 
                     }
-                    
+
                     double zoomA = minZoom;
                     double zoomB = maxZoom;
                     int zoomAIndex = 0;
                     int zoomBIndex = pointStops.Count() - 1;
 
                     // get min max zoom bounds from array
-                    if(zoom <= minZoom)
+                    if (zoom <= minZoom)
                     {
                         //zoomA = minZoom;
-                        //zoomB = minZoom;
-                        zoomA = minZoom;
-                        zoomB = pointStops[1].Item1;
+                        //zoomB = pointStops[1].Item1;
+                        return pointStops.First().Item2;
                     }
                     else if (zoom >= maxZoom)
                     {
-                        zoomA = pointStops[pointStops.Count - 2].Item1;
-                        zoomB = maxZoom;
-                    } else
+                        //zoomA = pointStops[pointStops.Count - 2].Item1;
+                        //zoomB = maxZoom;
+                        return pointStops.Last().Item2;
+                    }
+                    else
                     {
                         // checking for consecutive values
                         for (int i = 1; i < pointStops.Count(); i++)
@@ -1104,10 +1124,11 @@ namespace VectorTileRenderer
                 var minValue = startValue as string;
                 var maxValue = endValue as string;
 
-                if(Math.Abs(zoomA - zoom) <= Math.Abs(zoomB - zoom))
+                if (Math.Abs(zoomA - zoom) <= Math.Abs(zoomB - zoom))
                 {
                     return minValue;
-                } else
+                }
+                else
                 {
                     return maxValue;
                 }

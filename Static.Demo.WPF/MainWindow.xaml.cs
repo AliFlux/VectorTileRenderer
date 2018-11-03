@@ -51,6 +51,11 @@ namespace Demo.WPF
             theMethod.Invoke(this, null);
         }
 
+        void zurichMbTilesAliFluxStyle()
+        {
+            showMbTiles(mainDir + @"tiles/zurich.mbtiles", mainDir + @"styles/aliflux-style.json", 8579, 10645, 8581, 10647, 14, 512);
+        }
+
         void zurichMbTilesBasicStyle()
         {
             showMbTiles(mainDir + @"tiles/zurich.mbtiles", mainDir + @"styles/basic-style.json", 8579, 10645, 8581, 10647, 14, 512);
@@ -79,6 +84,12 @@ namespace Demo.WPF
         void islamabadMbTilesLightStyle()
         {
             showMbTiles(mainDir + @"tiles/islamabad.mbtiles", mainDir + @"styles/light-style.json", 1438, 1226, 1440, 1228, 11, 512);
+        }
+
+        void guangzhouMbTilesAliFluxStyle()
+        {
+            //showMbTiles(mainDir + @"tiles/guangzhou.mbtiles", mainDir + @"styles/aliflux-style.json", 416, 288, 418, 290, 9, 512);
+            showMbTiles(@"F:\AliData\C#\FlightMapper\FlightMapper\bin\Debug\tiles\asia.mbtiles", mainDir + @"styles/aliflux-style.json", 368, 311, 373, 313, 9, 512);
         }
 
         void zurichPbfBasicStyle()
@@ -118,7 +129,7 @@ namespace Demo.WPF
 
             // load style and font
             var style = new VectorTileRenderer.Style(mainDir + @"styles/hybrid-style.json");
-            style.FontFallbackDirectory = mainDir + @"styles/fonts/";
+            style.FontDirectory = mainDir + @"styles/fonts/";
 
             // set pbf as tile provider
             var vectorProvider = new VectorTileRenderer.Sources.PbfTileSource(mainDir + @"tiles/zurich.pbf.gz");
@@ -133,6 +144,8 @@ namespace Demo.WPF
             var bitmapR = await Renderer.Render(style, canvas, 0, 0, 14, 256, 256, 1);
             demoImage.Source = bitmapR;
 
+            scrollViewer.Background = new SolidColorBrush(style.GetBackgroundColor(14));
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine(elapsedMs + "ms time");
@@ -144,7 +157,7 @@ namespace Demo.WPF
 
             // load style and font
             var style = new VectorTileRenderer.Style(stylePath);
-            style.FontFallbackDirectory = mainDir + @"styles/fonts/";
+            style.FontDirectory = mainDir + @"styles/fonts/";
 
             // set pbf as tile provider
             var provider = new VectorTileRenderer.Sources.PbfTileSource(path);
@@ -155,23 +168,25 @@ namespace Demo.WPF
             var bitmapR = await Renderer.Render(style, canvas, 0, 0, zoom, size, size, scale);
             demoImage.Source = bitmapR;
 
+            scrollViewer.Background = new SolidColorBrush(style.GetBackgroundColor(zoom));
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine(elapsedMs + "ms time");
         }
 
-        void showMbTiles(string path, string stylePath, int minX, int minY, int maxX, int maxY, int zoom, double size = 512, double scale = 1)
+        async void showMbTiles(string path, string stylePath, int minX, int minY, int maxX, int maxY, int zoom, double size = 512, double scale = 1)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             // load style and font
             var style = new VectorTileRenderer.Style(stylePath);
-            style.FontFallbackDirectory = mainDir + @"styles/fonts/";
+            style.FontDirectory = mainDir + @"styles/fonts/";
 
             // set pbf as tile provider
             var provider = new VectorTileRenderer.Sources.MbTilesSource(path);
             style.SetSourceProvider(0, provider);
-            
+
             BitmapSource[,] bitmapSources = new BitmapSource[maxX - minX + 1, maxY - minY + 1];
 
             // loop through tiles and render them
@@ -181,7 +196,12 @@ namespace Demo.WPF
                 {
                     var canvas = new SkiaCanvas();
                     var bitmapR = await Renderer.Render(style, canvas, x, y, zoom, size, size, scale);
-                    
+
+                    if (bitmapR == null)
+                    {
+
+                    }
+
                     bitmapSources[x - minX, maxY - y] = bitmapR;
                 });
             });
@@ -190,6 +210,7 @@ namespace Demo.WPF
             var bitmap = mergeBitmaps(bitmapSources);
             demoImage.Source = bitmap;
 
+            scrollViewer.Background = new SolidColorBrush(style.GetBackgroundColor(zoom));
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -216,7 +237,7 @@ namespace Demo.WPF
 
             return bmp;
         }
-        
+
         private void demoImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();

@@ -23,9 +23,10 @@ namespace Gmap.Demo.WinForms
             gmap.Position = new PointLatLng(33.698292, 73.060766);
             gmap.MinZoom = 1;
             gmap.MaxZoom = 17;
-            gmap.Zoom = 12;
+            gmap.Zoom = 13;
             gmap.Manager.Mode = AccessMode.ServerAndCache;
             gmap.CanDragMap = true;
+            gmap.SelectedAreaFillColor = Color.Transparent;
             gmap.ShowCenter = false;
             gmap.MapProvider = GMap.NET.MapProviders.GoogleMapProvider.Instance;
             gmap.DragButton = System.Windows.Forms.MouseButtons.Left;

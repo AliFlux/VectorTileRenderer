@@ -46,7 +46,7 @@ Vector Tiles are a relatively newer concept. They operate almost like an SVG ima
 ```C#
 // load style and fonts
 var style = new VectorTileRenderer.Style("basic-style.json");
-style.FontFallbackDirectory = "styles/fonts/";
+style.FontDirectory = "styles/fonts/";
 
 // set pbf as tile provider
 var provider = new VectorTileRenderer.Sources.PbfTileSource("tile.pbf");
@@ -65,7 +65,7 @@ imageView.Source = bitmap;
 ```C#
 // load style and fonts
 var style = new VectorTileRenderer.Style("bright-style.json");
-style.FontFallbackDirectory = "styles/fonts/";
+style.FontDirectory = "styles/fonts/";
 
 // set mbtiles as tile provider
 var provider = new VectorTileRenderer.Sources.MbTilesSource("zurich.mbtiles");
@@ -89,7 +89,7 @@ imageView.Source = bitmap;
 ```C#
 // load style and fonts
 var style = new VectorTileRenderer.Style("hybrid-style.json");
-style.FontFallbackDirectory = "styles/fonts/";
+style.FontDirectory = "styles/fonts/";
 
 // add vector tile
 var vectorProvider = new VectorTileRenderer.Sources.PbfTileSource(@"tiles/zurich.pbf.gz");

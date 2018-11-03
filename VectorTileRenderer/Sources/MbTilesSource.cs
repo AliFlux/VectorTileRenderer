@@ -77,7 +77,7 @@ namespace VectorTileRenderer.Sources
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
                 throw new MemberAccessException("Could not load Mbtiles source file");
             }

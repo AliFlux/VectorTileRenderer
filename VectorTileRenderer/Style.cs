@@ -634,9 +634,9 @@ namespace VectorTileRenderer
             if (colorString.StartsWith("hsl("))
             {
                 var segments = colorString.Replace('%', '\0').Split(',', '(', ')');
-                double h = double.Parse(segments[1]);
-                double s = double.Parse(segments[2]);
-                double l = double.Parse(segments[3]);
+                double h = double.Parse(segments[1], new CultureInfo("en-US", true));
+                double s = double.Parse(segments[2], new CultureInfo("en-US", true));
+                double l = double.Parse(segments[3], new CultureInfo("en-US", true));
 
                 var color = (new ColorMine.ColorSpaces.Hsl()
                 {
@@ -651,10 +651,10 @@ namespace VectorTileRenderer
             if (colorString.StartsWith("hsla("))
             {
                 var segments = colorString.Replace('%', '\0').Split(',', '(', ')');
-                double h = double.Parse(segments[1]);
-                double s = double.Parse(segments[2]);
-                double l = double.Parse(segments[3]);
-                double a = double.Parse(segments[4]) * 255;
+                double h = double.Parse(segments[1], new CultureInfo("en-US", true));
+                double s = double.Parse(segments[2], new CultureInfo("en-US", true));
+                double l = double.Parse(segments[3], new CultureInfo("en-US", true));
+                double a = double.Parse(segments[4], new CultureInfo("en-US", true)) * 255;
 
                 var color = (new ColorMine.ColorSpaces.Hsl()
                 {
@@ -669,10 +669,10 @@ namespace VectorTileRenderer
             if (colorString.StartsWith("rgba("))
             {
                 var segments = colorString.Replace('%', '\0').Split(',', '(', ')');
-                double r = double.Parse(segments[1]);
-                double g = double.Parse(segments[2]);
-                double b = double.Parse(segments[3]);
-                double a = double.Parse(segments[4]) * 255;
+                double r = double.Parse(segments[1], new CultureInfo("en-US", true));
+                double g = double.Parse(segments[2], new CultureInfo("en-US", true));
+                double b = double.Parse(segments[3], new CultureInfo("en-US", true));
+                double a = double.Parse(segments[4], new CultureInfo("en-US", true)) * 255;
 
                 return Color.FromArgb((byte)a, (byte)r, (byte)g, (byte)b);
             }
@@ -680,9 +680,9 @@ namespace VectorTileRenderer
             if (colorString.StartsWith("rgb("))
             {
                 var segments = colorString.Replace('%', '\0').Split(',', '(', ')');
-                double r = double.Parse(segments[1]);
-                double g = double.Parse(segments[2]);
-                double b = double.Parse(segments[3]);
+                double r = double.Parse(segments[1], new CultureInfo("en-US", true));
+                double g = double.Parse(segments[2], new CultureInfo("en-US", true));
+                double b = double.Parse(segments[3], new CultureInfo("en-US", true));
 
                 return Color.FromRgb((byte)r, (byte)g, (byte)b);
             }

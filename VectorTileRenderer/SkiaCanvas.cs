@@ -23,9 +23,6 @@ namespace VectorTileRenderer
         SKSurface surface;
         SKCanvas canvas;
 
-        private GRContext grContext;
-        GRBackendRenderTargetDesc renderTarget;
-
         public bool ClipOverflow { get; set; } = false;
         private Rect clipRectangle;
         List<IntPoint> clipRectanglePath;
@@ -513,64 +510,147 @@ namespace VectorTileRenderer
 
         }
 
+        double getPathLength(List<Point> path)
+        {
+            double distance = 0;
+            for (var i = 0; i < path.Count - 2; i++)
+            {
+                distance += (path[i] - path[i + 1]).Length;
+            }
+
+            return distance;
+        }
+
+        double getAbsoluteDiff2Angles(double x, double y, double c = Math.PI)
+        {
+            return c - Math.Abs((Math.Abs(x - y) % 2 * c) - c);
+        }
+
+        bool checkPathSqueezing(List<Point> path, double textHeight)
+        {
+            //double maxCurve = 0;
+            double previousAngle = 0;
+            for (var i = 0; i < path.Count - 2; i++)
+            {
+                var vector = (path[i] - path[i + 1]);
+
+                var angle = Math.Atan2(vector.Y, vector.X);
+                var angleDiff = Math.Abs(getAbsoluteDiff2Angles(angle, previousAngle));
+
+                //var length = vector.Length / textHeight;
+                //var curve = angleDiff / length;
+                //maxCurve = Math.Max(curve, maxCurve);
+
+
+                if (angleDiff > Math.PI / 3)
+                {
+                    return true;
+                }
+
+                previousAngle = angle;
+            }
+
+            return false;
+
+            //return 0;
+
+            //return maxCurve;
+        }
+
+        void debugRectangle(Rect rectangle, Color color)
+        {
+            var list = new List<Point>()
+            {
+                rectangle.TopLeft,
+                rectangle.TopRight,
+                rectangle.BottomRight,
+                rectangle.BottomLeft,
+            };
+
+            var brush = new Brush();
+            brush.Paint = new Paint();
+            brush.Paint.FillColor = color;
+
+            this.DrawPolygon(list, brush);
+        }
+
         public void DrawTextOnPath(List<Point> geometry, Brush style)
         {
             // buggggyyyyyy
             // requires an amazing collision system to work :/
             // --
-            return;
+            //return;
 
-            if (ClipOverflow)
+            //if (ClipOverflow)
+            //{
+            geometry = clipLine(geometry);
+            if (geometry == null)
             {
-                geometry = clipLine(geometry);
-                if (geometry == null)
-                {
-                    return;
-                }
+                return;
             }
+            //}
 
             var path = getPathFromGeometry(geometry);
             var text = transformText(style.Text, style);
 
-            var left = geometry.Min(item => item.X) - style.Paint.TextSize;
-            var top = geometry.Min(item => item.Y) - style.Paint.TextSize;
-            var right = geometry.Max(item => item.X) + style.Paint.TextSize;
-            var bottom = geometry.Max(item => item.Y) + style.Paint.TextSize;
+            var pathSqueezed = checkPathSqueezing(geometry, style.Paint.TextSize);
+
+            if (pathSqueezed)
+            {
+                return;
+            }
+
+            //text += " : " + bending.ToString("F");
+
+            var bounds = path.Bounds;
+
+            var left = bounds.Left - style.Paint.TextSize;
+            var top = bounds.Top - style.Paint.TextSize;
+            var right = bounds.Right + style.Paint.TextSize;
+            var bottom = bounds.Bottom + style.Paint.TextSize;
 
             var rectangle = new Rect(left, top, right - left, bottom - top);
 
+            //if (rectangle.Left <= 0 || rectangle.Right >= width || rectangle.Top <= 0 || rectangle.Bottom >= height)
+            //{
+            //    debugRectangle(rectangle, Color.FromArgb(128, 255, 100, 100));
+            //    // bounding box (much bigger) collides with edges
+            //    return;
+            //}
+
             if (textCollides(rectangle))
             {
-                // collision detected
+                //debugRectangle(rectangle, Color.FromArgb(128, 100, 255, 100));
+                // collides with other
                 return;
             }
             textRectangles.Add(rectangle);
 
+            if (style.Text.Length * style.Paint.TextSize * 0.2 >= getPathLength(geometry))
+            {
+                //debugRectangle(rectangle, Color.FromArgb(128, 100, 100, 255));
+                // exceeds estimated path length
+                return;
+            }
 
-            //var list = new List<Point>()
-            //{
-            //    rectangle.TopLeft,
-            //    rectangle.TopRight,
-            //    rectangle.BottomRight,
-            //    rectangle.BottomLeft,
-            //};
 
-            //var brush = new Brush();
-            //brush.Paint = new Paint();
-            //brush.Paint.FillColor = Color.FromArgb(150, 255, 0, 0);
+            //debugRectangle(rectangle, Color.FromArgb(150, 255, 0, 0));
 
-            //this.DrawPolygon(list, brush);
 
 
             var offset = new SKPoint((float)style.Paint.TextOffset.X, (float)style.Paint.TextOffset.Y);
             var bytes = Encoding.UTF32.GetBytes(text);
             if (style.Paint.TextStrokeWidth != 0)
             {
-                // TODO optimize this DrawTextOnPath in Skia repo
+                // TODO implement this func custom way...
                 canvas.DrawTextOnPath(bytes, path, offset, getTextStrokePaint(style));
             }
 
             canvas.DrawTextOnPath(bytes, path, offset, getTextPaint(style));
+
+
+            //canvas.DrawText(Encoding.UTF32.GetBytes(bending.ToString("F")), new SKPoint((float)left + 10, (float)top + 10), getTextStrokePaint(style));
+            //canvas.DrawText(Encoding.UTF32.GetBytes(bending.ToString("F")), new SKPoint((float)left + 10, (float)top + 10), getTextPaint(style));
         }
 
         public void DrawPoint(Point geometry, Brush style)
@@ -587,17 +667,18 @@ namespace VectorTileRenderer
             if (ClipOverflow)
             {
                 allGeometries = clipPolygon(geometry);
-            } else
+            }
+            else
             {
                 allGeometries = new List<List<Point>>() { geometry };
             }
 
-            if(allGeometries == null)
+            if (allGeometries == null)
             {
                 return;
             }
 
-            foreach(var geometryPart in allGeometries)
+            foreach (var geometryPart in allGeometries)
             {
                 var path = getPathFromGeometry(geometryPart);
                 if (path == null)
@@ -674,6 +755,18 @@ namespace VectorTileRenderer
 
         public BitmapSource FinishDrawing()
         {
+            //using (var paint = new SKPaint())
+            //{
+            //    paint.Color = new SKColor(255, 255, 255, 255);
+            //    paint.Style = SKPaintStyle.Fill;
+            //    paint.TextSize = 24;
+            //    paint.IsAntialias = true;
+
+            //    var bytes = Encoding.UTF32.GetBytes("HELLO WORLD");
+            //    canvas.DrawText(bytes, new SKPoint(10, 10), paint);
+            //}
+
+
             //surface.Canvas.Flush();
             //grContext.
 
@@ -687,4 +780,5 @@ namespace VectorTileRenderer
         }
     }
 }
+
 

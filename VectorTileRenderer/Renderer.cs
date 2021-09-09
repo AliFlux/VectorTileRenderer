@@ -71,30 +71,39 @@ namespace VectorTileRenderer
 
             var bitmap = await Render(style, canvas, x, y, zoom, sizeX, sizeY, scale, whiteListLayers);
 
-            if (bitmap != null)
-            {
-                try
-                {
-                    lock (cacheLock)
-                    {
-                        if (File.Exists(path))
-                        {
-                            return loadBitmap(path);
-                        }
+            // save to file in async fashion
+            _ = Task.Run(() =>
+              {
 
-                        using (var fileStream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
-                        {
-                            BitmapEncoder encoder = new PngBitmapEncoder();
-                            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-                            encoder.Save(fileStream);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
-            }
+                  if (bitmap != null)
+                  {
+                      try
+                      {
+                          lock (cacheLock)
+                          {
+                              if (File.Exists(path))
+                              {
+                                  return;
+                              }
+
+                              using (var fileStream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.ReadWrite))
+                              {
+                                  BitmapEncoder encoder = new PngBitmapEncoder();
+                                  encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                                  encoder.Save(fileStream);
+                              }
+                          }
+                      }
+                      catch (Exception e)
+                      {
+                          return;
+                      }
+                  }
+
+              });
+
+
+
 
             return bitmap;
         }

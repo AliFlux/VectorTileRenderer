@@ -64,6 +64,12 @@ namespace VectorTileRenderer
             clipRectanglePath.Add(new IntPoint((int)clipRectangle.Top, (int)clipRectangle.Right));
             clipRectanglePath.Add(new IntPoint((int)clipRectangle.Bottom, (int)clipRectangle.Right));
             clipRectanglePath.Add(new IntPoint((int)clipRectangle.Bottom, (int)clipRectangle.Left));
+
+            //clipRectanglePath = new List<IntPoint>();
+            //clipRectanglePath.Add(new IntPoint((int)clipRectangle.Top + 10, (int)clipRectangle.Left + 10));
+            //clipRectanglePath.Add(new IntPoint((int)clipRectangle.Top + 10, (int)clipRectangle.Right - 10));
+            //clipRectanglePath.Add(new IntPoint((int)clipRectangle.Bottom - 10, (int)clipRectangle.Right - 10));
+            //clipRectanglePath.Add(new IntPoint((int)clipRectangle.Bottom - 10, (int)clipRectangle.Left + 10));
         }
 
         public void DrawBackground(Brush style)
@@ -131,7 +137,7 @@ namespace VectorTileRenderer
             return Math.Max(min, Math.Min(max, number));
         }
 
-        List<Point> clipPolygon(List<Point> geometry)
+        List<List<Point>> clipPolygon(List<Point> geometry) // may break polygons into multiple ones
         {
             Clipper c = new Clipper();
 
@@ -152,7 +158,7 @@ namespace VectorTileRenderer
 
             if (success && solution.Count > 0)
             {
-                var result = solution.First().Select(item => new Point(item.X, item.Y)).ToList();
+                var result = solution.Select(s => s.Select(item => new Point(item.X, item.Y)).ToList()).ToList();
                 return result;
             }
 
@@ -577,35 +583,39 @@ namespace VectorTileRenderer
 
         public void DrawPolygon(List<Point> geometry, Brush style)
         {
+            List<List<Point>> allGeometries = null;
             if (ClipOverflow)
             {
-                geometry = clipPolygon(geometry);
-                if (geometry == null)
-                {
-                    return;
-                }
+                allGeometries = clipPolygon(geometry);
+            } else
+            {
+                allGeometries = new List<List<Point>>() { geometry };
             }
 
-            var path = getPathFromGeometry(geometry);
-            if (path == null)
+            if(allGeometries == null)
             {
                 return;
             }
 
-            if (style.Paint.FillColor.R == 15)
+            foreach(var geometryPart in allGeometries)
             {
+                var path = getPathFromGeometry(geometryPart);
+                if (path == null)
+                {
+                    return;
+                }
 
+                SKPaint fillPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    StrokeCap = convertCap(style.Paint.LineCap),
+                    Color = new SKColor(style.Paint.FillColor.R, style.Paint.FillColor.G, style.Paint.FillColor.B, (byte)clamp(style.Paint.FillColor.A * style.Paint.FillOpacity, 0, 255)),
+                    IsAntialias = true,
+                };
+
+                canvas.DrawPath(path, fillPaint);
             }
 
-            SKPaint fillPaint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                StrokeCap = convertCap(style.Paint.LineCap),
-                Color = new SKColor(style.Paint.FillColor.R, style.Paint.FillColor.G, style.Paint.FillColor.B, (byte)clamp(style.Paint.FillColor.A * style.Paint.FillOpacity, 0, 255)),
-                IsAntialias = true,
-            };
-
-            canvas.DrawPath(path, fillPaint);
         }
 
 

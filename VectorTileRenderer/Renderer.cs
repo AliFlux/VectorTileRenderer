@@ -331,6 +331,7 @@ namespace VectorTileRenderer
                         }
                         else if (feature.GeometryType == "Polygon")
                         {
+
                             foreach (var polygon in geometry)
                             {
                                 canvas.DrawPolygon(polygon, brush);
@@ -339,6 +340,9 @@ namespace VectorTileRenderer
                         else if (feature.GeometryType == "Unknown")
                         {
                             canvas.DrawUnknown(geometry, brush);
+                        } else
+                        {
+
                         }
                     }
                     catch (Exception)

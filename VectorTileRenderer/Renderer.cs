@@ -72,7 +72,7 @@ namespace VectorTileRenderer
             var bitmap = await Render(style, canvas, x, y, zoom, sizeX, sizeY, scale, whiteListLayers);
 
             // save to file in async fashion
-            _ = Task.Run(() =>
+            var _t = Task.Run(() =>
               {
 
                   if (bitmap != null)

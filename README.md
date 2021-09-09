@@ -147,8 +147,7 @@ The VectorTileRender has support for both mapbox and openmaptiles. But a compata
 
 The entire project including the demos, integrations, and optimization techniques was developed by myself in 4 days. I can't call this production ready yet, but I couldn't encounter any significant issues while testing the demos, except for these:
 
-- At some places, the text might be cut off at tile edges.
-- The text on lines/roads is intentionally disabled due to rendering issues with SkiaSharp.
+- At some places, the text might be cut off or distorted at edges.
 - There's no mechanism for purging old cache in tiles-cache directory, yet.
 - It uses SkiaSharp for rendering which is mostly done on CPU, so the tile loading might show some lag.
 

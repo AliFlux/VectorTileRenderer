@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -27,19 +29,22 @@ namespace VectorTileRenderer
 
             public VectorTileFeature VectorTileFeature { get; set; } = null;
 
-            public List<List<Point>> Geometry {get;set;} = null;
+            public List<List<Point>> Geometry { get; set; } = null;
 
             public Brush Brush { get; set; } = null;
         }
 
-        public async static Task<BitmapSource> RenderCached(string cachePath, Style style, ICanvas canvas, int x, int y, double zoom, double sizeX = 512, double sizeY = 512, double scale = 1)
+        public async static Task<BitmapSource> RenderCached(string cachePath, Style style, ICanvas canvas, int x, int y, double zoom, double sizeX = 512, double sizeY = 512, double scale = 1, List<string> whiteListLayers = null)
         {
+            string layerString = whiteListLayers == null ? "" : string.Join(",-", whiteListLayers.ToArray());
+
             var bundle = new
             {
                 style.Hash,
                 sizeX,
                 sizeY,
                 scale,
+                layerString,
             };
 
             lock (cacheLock)
@@ -55,8 +60,8 @@ namespace VectorTileRenderer
 
             var fileName = x + "x" + y + "-" + zoom + "-" + hash + ".png";
             var path = Path.Combine(cachePath, fileName);
-            
-            lock(cacheLock)
+
+            lock (cacheLock)
             {
                 if (File.Exists(path))
                 {
@@ -64,9 +69,9 @@ namespace VectorTileRenderer
                 }
             }
 
-            var bitmap = await Render(style, canvas, x, y, zoom, sizeX, sizeY, scale);
+            var bitmap = await Render(style, canvas, x, y, zoom, sizeX, sizeY, scale, whiteListLayers);
 
-            if(bitmap != null)
+            if (bitmap != null)
             {
                 try
                 {
@@ -109,7 +114,7 @@ namespace VectorTileRenderer
             }
         }
 
-        public async static Task<BitmapSource> Render(Style style, ICanvas canvas, int x, int y, double zoom, double sizeX = 512, double sizeY = 512, double scale = 1)
+        public async static Task<BitmapSource> Render(Style style, ICanvas canvas, int x, int y, double zoom, double sizeX = 512, double sizeY = 512, double scale = 1, List<string> whiteListLayers = null)
         {
             Dictionary<Source, Stream> rasterTileCache = new Dictionary<Source, Stream>();
             Dictionary<Source, VectorTile> vectorTileCache = new Dictionary<Source, VectorTile>();
@@ -127,15 +132,21 @@ namespace VectorTileRenderer
 
             sizeX *= scale;
             sizeY *= scale;
-            
+
             canvas.StartDrawing(sizeX, sizeY);
-            
-            // TODO refactor tuples to struct
+
             var visualLayers = new List<VisualLayer>();
 
             // TODO refactor this messy block
             foreach (var layer in style.Layers)
             {
+                if (whiteListLayers != null && layer.Type != "background")
+                {
+                    if (!whiteListLayers.Contains(layer.SourceLayer))
+                    {
+                        continue;
+                    }
+                }
                 if (layer.Source != null)
                 {
                     if (layer.Source.Type == "vector")
@@ -194,7 +205,7 @@ namespace VectorTileRenderer
                     {
                         if (!rasterTileCache.ContainsKey(layer.Source))
                         {
-                            if(layer.Source.Provider != null)
+                            if (layer.Source.Provider != null)
                             {
                                 if (layer.Source.Provider is Sources.ITileSource)
                                 {
@@ -212,7 +223,7 @@ namespace VectorTileRenderer
                             }
                         }
 
-                        if(rasterTileCache.ContainsKey(layer.Source))
+                        if (rasterTileCache.ContainsKey(layer.Source))
                         {
                             var brush = style.ParseStyle(layer, scale, new Dictionary<string, object>());
 
@@ -240,6 +251,20 @@ namespace VectorTileRenderer
                                 attributes["$id"] = layer.ID;
                                 attributes["$zoom"] = actualZoom;
 
+                                //if ((string)attributes["$type"] == "Point")
+                                //{
+                                //    if (attributes.ContainsKey("class"))
+                                //    {
+                                //        if ((string)attributes["class"] == "country")
+                                //        {
+                                //            if (layer.ID == "country_label")
+                                //            {
+
+                                //            }
+                                //        }
+                                //    }
+                                //}
+
                                 if (style.ValidateLayer(layer, actualZoom, attributes))
                                 {
                                     var brush = style.ParseStyle(layer, scale, attributes);
@@ -248,7 +273,7 @@ namespace VectorTileRenderer
                                     {
                                         continue;
                                     }
-                                    
+
                                     visualLayers.Add(new VisualLayer()
                                     {
                                         Type = VisualLayerType.Vector,
@@ -265,7 +290,7 @@ namespace VectorTileRenderer
                 else if (layer.Type == "background")
                 {
                     var brushes = style.GetStyleByType("background", actualZoom, scale);
-                    foreach(var brush in brushes)
+                    foreach (var brush in brushes)
                     {
                         canvas.DrawBackground(brush);
                     }
@@ -275,7 +300,7 @@ namespace VectorTileRenderer
             // defered rendering to preserve text drawing order
             foreach (var layer in visualLayers.OrderBy(item => item.Brush.ZIndex))
             {
-                if(layer.Type == VisualLayerType.Vector)
+                if (layer.Type == VisualLayerType.Vector)
                 {
                     var feature = layer.VectorTileFeature;
                     var geometry = layer.Geometry;
@@ -288,33 +313,40 @@ namespace VectorTileRenderer
                         continue;
                     }
 
-                    if (feature.GeometryType == "Point")
+                    try
                     {
-                        foreach (var point in geometry)
+                        if (feature.GeometryType == "Point")
                         {
-                            canvas.DrawPoint(point.First(), brush);
+                            foreach (var point in geometry)
+                            {
+                                canvas.DrawPoint(point.First(), brush);
+                            }
+                        }
+                        else if (feature.GeometryType == "LineString")
+                        {
+                            foreach (var line in geometry)
+                            {
+                                canvas.DrawLineString(line, brush);
+                            }
+                        }
+                        else if (feature.GeometryType == "Polygon")
+                        {
+                            foreach (var polygon in geometry)
+                            {
+                                canvas.DrawPolygon(polygon, brush);
+                            }
+                        }
+                        else if (feature.GeometryType == "Unknown")
+                        {
+                            canvas.DrawUnknown(geometry, brush);
                         }
                     }
-                    else if (feature.GeometryType == "LineString")
+                    catch (Exception)
                     {
-                        foreach (var line in geometry)
-                        {
-                            canvas.DrawLineString(line, brush);
-                        }
-                    }
-                    else if (feature.GeometryType == "Polygon")
-                    {
-                        foreach (var polygon in geometry)
-                        {
-                            canvas.DrawPolygon(polygon, brush);
-                        }
-                    }
-                    else if (feature.GeometryType == "Unknown")
-                    {
-                        canvas.DrawUnknown(geometry, brush);
+
                     }
                 }
-                else if(layer.Type == VisualLayerType.Raster)
+                else if (layer.Type == VisualLayerType.Raster)
                 {
                     canvas.DrawImage(layer.RasterStream, layer.Brush);
                     layer.RasterStream.Close();
@@ -361,7 +393,7 @@ namespace VectorTileRenderer
 
             return canvas.FinishDrawing();
         }
-        
+
         private static List<List<Point>> localizeGeometry(List<List<Point>> coordinates, double sizeX, double sizeY, double extent)
         {
             return coordinates.Select(list =>
@@ -380,7 +412,8 @@ namespace VectorTileRenderer
                 }).ToList();
             }).ToList();
         }
-        
+
 
     }
 }
+

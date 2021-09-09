@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
@@ -21,13 +22,20 @@ namespace VectorTileRenderer.Sources
         public string MBTilesVersion { get; private set; }
         public string Path { get; private set; }
 
-        Dictionary<string, VectorTile> tileCache = new Dictionary<string, VectorTile>();
+        ConcurrentDictionary<string, VectorTile> tileCache = new ConcurrentDictionary<string, VectorTile>();
 
         private GlobalMercator gmt = new GlobalMercator();
+
+        SQLiteConnection sharedConnection;
+
 
         public MbTilesSource(string path)
         {
             this.Path = path;
+
+            sharedConnection = new SQLiteConnection(String.Format("Data Source={0};Version=3;Mode=ReadOnly", this.Path));
+            sharedConnection.Open();
+
             loadMetadata();
         }
 
@@ -35,44 +43,40 @@ namespace VectorTileRenderer.Sources
         {
             try
             {
-                using (SQLiteConnection conn = new SQLiteConnection(String.Format("Data Source={0};Version=3;", this.Path)))
+                using (SQLiteCommand cmd = new SQLiteCommand() { Connection = sharedConnection, CommandText = "SELECT * FROM metadata;" })
                 {
-                    conn.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand() { Connection = conn, CommandText = "SELECT * FROM metadata;" })
+                    SQLiteDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
                     {
-                        SQLiteDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
+                        string name = reader["name"].ToString();
+                        switch (name.ToLower())
                         {
-                            string name = reader["name"].ToString();
-                            switch (name.ToLower())
-                            {
-                                case "bounds":
-                                    string val = reader["value"].ToString();
-                                    string[] vals = val.Split(new char[] { ',' });
-                                    this.Bounds = new GlobalMercator.GeoExtent() { West = Convert.ToDouble(vals[0]), South = Convert.ToDouble(vals[1]), East = Convert.ToDouble(vals[2]), North = Convert.ToDouble(vals[3]) };
-                                    break;
-                                case "center":
-                                    val = reader["value"].ToString();
-                                    vals = val.Split(new char[] { ',' });
-                                    this.Center = new GlobalMercator.CoordinatePair() { X = Convert.ToDouble(vals[0]), Y = Convert.ToDouble(vals[1]) };
-                                    break;
-                                case "minzoom":
-                                    this.MinZoom = Convert.ToInt32(reader["value"]);
-                                    break;
-                                case "maxzoom":
-                                    this.MaxZoom = Convert.ToInt32(reader["value"]);
-                                    break;
-                                case "name":
-                                    this.Name = reader["value"].ToString();
-                                    break;
-                                case "description":
-                                    this.Description = reader["value"].ToString();
-                                    break;
-                                case "version":
-                                    this.MBTilesVersion = reader["value"].ToString();
-                                    break;
+                            case "bounds":
+                                string val = reader["value"].ToString();
+                                string[] vals = val.Split(new char[] { ',' });
+                                this.Bounds = new GlobalMercator.GeoExtent() { West = Convert.ToDouble(vals[0]), South = Convert.ToDouble(vals[1]), East = Convert.ToDouble(vals[2]), North = Convert.ToDouble(vals[3]) };
+                                break;
+                            case "center":
+                                val = reader["value"].ToString();
+                                vals = val.Split(new char[] { ',' });
+                                this.Center = new GlobalMercator.CoordinatePair() { X = Convert.ToDouble(vals[0]), Y = Convert.ToDouble(vals[1]) };
+                                break;
+                            case "minzoom":
+                                this.MinZoom = Convert.ToInt32(reader["value"]);
+                                break;
+                            case "maxzoom":
+                                this.MaxZoom = Convert.ToInt32(reader["value"]);
+                                break;
+                            case "name":
+                                this.Name = reader["value"].ToString();
+                                break;
+                            case "description":
+                                this.Description = reader["value"].ToString();
+                                break;
+                            case "version":
+                                this.MBTilesVersion = reader["value"].ToString();
+                                break;
 
-                            }
                         }
                     }
                 }
@@ -87,18 +91,14 @@ namespace VectorTileRenderer.Sources
         {
             try
             {
-                using (SQLiteConnection conn = new SQLiteConnection(String.Format("Data Source={0};Version=3;", Path)))
+                using (SQLiteCommand cmd = new SQLiteCommand() { Connection = sharedConnection, CommandText = String.Format("SELECT * FROM tiles WHERE tile_column = {0} and tile_row = {1} and zoom_level = {2}", x, y, zoom) })
                 {
-                    conn.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand() { Connection = conn, CommandText = String.Format("SELECT * FROM tiles WHERE tile_column = {0} and tile_row = {1} and zoom_level = {2}", x, y, zoom) })
-                    {
-                        SQLiteDataReader reader = cmd.ExecuteReader();
+                    SQLiteDataReader reader = cmd.ExecuteReader();
 
-                        if (reader.Read())
-                        {
-                            var stream = reader.GetStream(reader.GetOrdinal("tile_data"));
-                            return stream;
-                        }
+                    if (reader.Read())
+                    {
+                        var stream = reader.GetStream(reader.GetOrdinal("tile_data"));
+                        return stream;
                     }
                 }
             }

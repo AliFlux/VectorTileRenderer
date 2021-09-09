@@ -118,24 +118,5 @@ namespace Gmap.Demo.WinForms
         }
 
 
-        Bitmap GetBitmap(System.Windows.Media.Imaging.BitmapSource source)
-        {
-            Bitmap bmp = new Bitmap(
-              source.PixelWidth,
-              source.PixelHeight,
-              PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(
-              new Rectangle(Point.Empty, bmp.Size),
-              ImageLockMode.WriteOnly,
-              PixelFormat.Format32bppPArgb);
-            source.CopyPixels(
-              System.Windows.Int32Rect.Empty,
-              data.Scan0,
-              data.Height * data.Stride,
-              data.Stride);
-            bmp.UnlockBits(data);
-            return bmp;
-        }
-
     }
 }

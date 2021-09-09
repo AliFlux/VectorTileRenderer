@@ -1,10 +1,13 @@
 ﻿using ClipperLib;
 using SkiaSharp;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -15,7 +18,7 @@ namespace VectorTileRenderer
     {
         int width;
         int height;
-        
+
         WriteableBitmap bitmap;
         SKSurface surface;
         SKCanvas canvas;
@@ -27,7 +30,9 @@ namespace VectorTileRenderer
         private Rect clipRectangle;
         List<IntPoint> clipRectanglePath;
 
-        Dictionary<string, SKTypeface> fontPairs = new Dictionary<string, SKTypeface>();
+        ConcurrentDictionary<string, SKTypeface> fontPairs = new ConcurrentDictionary<string, SKTypeface>();
+        private static readonly Object fontLock = new Object();
+
         List<Rect> textRectangles = new List<Rect>();
 
         public void StartDrawing(double width, double height)
@@ -53,7 +58,7 @@ namespace VectorTileRenderer
 
             double padding = -5;
             clipRectangle = new Rect(padding, padding, this.width - padding * 2, this.height - padding * 2);
-            
+
             clipRectanglePath = new List<IntPoint>();
             clipRectanglePath.Add(new IntPoint((int)clipRectangle.Top, (int)clipRectangle.Left));
             clipRectanglePath.Add(new IntPoint((int)clipRectangle.Top, (int)clipRectangle.Right));
@@ -191,7 +196,7 @@ namespace VectorTileRenderer
             }
 
             var path = getPathFromGeometry(geometry);
-            if(path == null)
+            if (path == null)
             {
                 return;
             }
@@ -205,7 +210,7 @@ namespace VectorTileRenderer
                 IsAntialias = true,
             };
 
-            if(style.Paint.LineDashArray.Count() > 0)
+            if (style.Paint.LineDashArray.Count() > 0)
             {
                 var effect = SKPathEffect.CreateDash(style.Paint.LineDashArray.Select(n => (float)n).ToArray(), 0);
                 fillPaint.PathEffect = effect;
@@ -261,6 +266,7 @@ namespace VectorTileRenderer
                 TextEncoding = SKTextEncoding.Utf32,
                 TextAlign = convertAlignment(style.Paint.TextJustify),
                 Typeface = getFont(style.Paint.TextFont, style),
+                HintingLevel = SKPaintHinting.Normal,
             };
 
             return paint;
@@ -268,19 +274,20 @@ namespace VectorTileRenderer
 
         string transformText(string text, Brush style)
         {
-            if(text.Length == 0)
+            if (text.Length == 0)
             {
                 return "";
             }
 
-            if(style.Paint.TextTransform == TextTransform.Uppercase)
+            if (style.Paint.TextTransform == TextTransform.Uppercase)
             {
                 text = text.ToUpper();
-            } else if (style.Paint.TextTransform == TextTransform.Lowercase)
+            }
+            else if (style.Paint.TextTransform == TextTransform.Lowercase)
             {
                 text = text.ToLower();
             }
-            
+
             var paint = getTextPaint(style);
             text = breakText(text, paint, style);
 
@@ -296,15 +303,15 @@ namespace VectorTileRenderer
             {
                 var lineLength = paint.BreakText(restOfText, (float)(style.Paint.TextMaxWidth * style.Paint.TextSize));
 
-                if(lineLength == restOfText.Length)
+                if (lineLength == restOfText.Length)
                 {
                     // its the end
                     brokenText += restOfText.Trim();
                     break;
                 }
 
-                var lastSpaceIndex = restOfText.LastIndexOf(' ',  (int)(lineLength - 1));
-                if(lastSpaceIndex == -1 || lastSpaceIndex == 0)
+                var lastSpaceIndex = restOfText.LastIndexOf(' ', (int)(lineLength - 1));
+                if (lastSpaceIndex == -1 || lastSpaceIndex == 0)
                 {
                     // no more spaces, probably ;)
                     brokenText += restOfText.Trim();
@@ -322,9 +329,9 @@ namespace VectorTileRenderer
 
         bool textCollides(Rect rectangle)
         {
-            foreach(var rect in textRectangles)
+            foreach (var rect in textRectangles)
             {
-                if(rect.IntersectsWith(rectangle))
+                if (rect.IntersectsWith(rectangle))
                 {
                     return true;
                 }
@@ -334,78 +341,127 @@ namespace VectorTileRenderer
 
         SKTypeface getFont(string[] familyNames, Brush style)
         {
-            foreach (var name in familyNames)
+            lock (fontLock)
             {
-                if (fontPairs.ContainsKey(name))
+                foreach (var name in familyNames)
                 {
-                    return fontPairs[name];
-                }
-                
-                if (style.GlyphsDirectory != null)
-                {
-                    // check file system for ttf
-                    var newType = SKTypeface.FromFile(System.IO.Path.Combine(style.GlyphsDirectory, name + ".ttf"));
-                    if (newType != null)
+                    if (fontPairs.ContainsKey(name))
                     {
-                        fontPairs[name] = newType;
-                        return newType;
+                        return fontPairs[name];
                     }
 
-                    // check file system for otf
-                    newType = SKTypeface.FromFile(System.IO.Path.Combine(style.GlyphsDirectory, name + ".otf"));
-                    if (newType != null)
+                    if (style.GlyphsDirectory != null)
                     {
-                        fontPairs[name] = newType;
-                        return newType;
+                        // check file system for ttf
+                        var newType = SKTypeface.FromFile(System.IO.Path.Combine(style.GlyphsDirectory, name + ".ttf"));
+                        if (newType != null)
+                        {
+                            fontPairs[name] = newType;
+                            return newType;
+                        }
+
+                        // check file system for otf
+                        newType = SKTypeface.FromFile(System.IO.Path.Combine(style.GlyphsDirectory, name + ".otf"));
+                        if (newType != null)
+                        {
+                            fontPairs[name] = newType;
+                            return newType;
+                        }
+                    }
+
+                    var typeface = SKTypeface.FromFamilyName(name);
+                    if (typeface.FamilyName == name)
+                    {
+                        // gotcha!
+                        fontPairs[name] = typeface;
+                        return typeface;
                     }
                 }
 
-                var typeface = SKTypeface.FromFamilyName(name);
-                if (typeface.FamilyName == name)
+                // all options exhausted...
+                // get the first one
+                var fallback = SKTypeface.FromFamilyName(familyNames.First());
+                fontPairs[familyNames.First()] = fallback;
+                return fallback;
+            }
+        }
+
+        SKTypeface qualifyTypeface(string text, SKTypeface typeface)
+        {
+            var glyphs = new ushort[typeface.CountGlyphs(text)];
+            if (glyphs.Length < text.Length)
+            {
+                var fm = SKFontManager.Default;
+                var charIdx = (glyphs.Length > 0) ? glyphs.Length : 0;
+                return fm.MatchCharacter(text[glyphs.Length]);
+            }
+
+            return typeface;
+        }
+
+        void qualifyTypeface(Brush style, SKPaint paint)
+        {
+            var glyphs = new ushort[paint.Typeface.CountGlyphs(style.Text)];
+            if (glyphs.Length < style.Text.Length)
+            {
+                var fm = SKFontManager.Default;
+                var charIdx = (glyphs.Length > 0) ? glyphs.Length : 0;
+                var newTypeface = fm.MatchCharacter(style.Text[glyphs.Length]);
+
+                if (newTypeface == null)
                 {
-                    // gotcha!
-                    fontPairs[name] = typeface;
-                    return typeface;
+                    return;
+                }
+
+                paint.Typeface = newTypeface;
+
+                glyphs = new ushort[newTypeface.CountGlyphs(style.Text)];
+                if (glyphs.Length < style.Text.Length)
+                {
+                    // still causing issues
+                    // so we cut the rest
+                    charIdx = (glyphs.Length > 0) ? glyphs.Length : 0;
+
+                    style.Text = style.Text.Substring(0, charIdx);
                 }
             }
 
-            // all options exhausted...
-            // get the first one
-            var fallback = SKTypeface.FromFamilyName(familyNames.First());
-            fontPairs[familyNames.First()] = fallback;
-            return fallback;
         }
 
         public void DrawText(Point geometry, Brush style)
         {
-            if(style.Paint.TextOptional)
+            if (style.Paint.TextOptional)
             {
                 // TODO check symbol collision
                 //return;
             }
 
             var paint = getTextPaint(style);
+            qualifyTypeface(style, paint);
+
             var strokePaint = getTextStrokePaint(style);
             var text = transformText(style.Text, style);
             var allLines = text.Split('\n');
 
+            //paint.Typeface = qualifyTypeface(text, paint.Typeface);
+
             // detect collisions
-            if(allLines.Length > 0)
+            if (allLines.Length > 0)
             {
                 var biggestLine = allLines.OrderBy(line => line.Length).Last();
                 var bytes = Encoding.UTF32.GetBytes(biggestLine);
 
                 var width = (int)(paint.MeasureText(bytes));
                 int left = (int)(geometry.X - width / 2);
-                int top = (int)(geometry.Y - style.Paint.TextSize/2 * allLines.Length);
+                int top = (int)(geometry.Y - style.Paint.TextSize / 2 * allLines.Length);
                 int height = (int)(style.Paint.TextSize * allLines.Length);
 
                 var rectangle = new Rect(left, top, width, height);
                 rectangle.Inflate(5, 5);
 
-                if(ClipOverflow)
+                if (ClipOverflow)
                 {
-                    if(!clipRectangle.Contains(rectangle))
+                    if (!clipRectangle.Contains(rectangle))
                     {
                         return;
                     }
@@ -504,6 +560,7 @@ namespace VectorTileRenderer
             var bytes = Encoding.UTF32.GetBytes(text);
             if (style.Paint.TextStrokeWidth != 0)
             {
+                // TODO optimize this DrawTextOnPath in Skia repo
                 canvas.DrawTextOnPath(bytes, path, offset, getTextStrokePaint(style));
             }
 
@@ -512,7 +569,7 @@ namespace VectorTileRenderer
 
         public void DrawPoint(Point geometry, Brush style)
         {
-            if(style.Paint.IconImage != null)
+            if (style.Paint.IconImage != null)
             {
                 // draw icon here
             }
@@ -535,7 +592,7 @@ namespace VectorTileRenderer
                 return;
             }
 
-            if(style.Paint.FillColor.R == 15)
+            if (style.Paint.FillColor.R == 15)
             {
 
             }
@@ -596,7 +653,7 @@ namespace VectorTileRenderer
             bitmapImage.EndInit();
 
             var image = toSKImage(bitmapImage);
-            
+
             canvas.DrawImage(image, new SKPoint(0, 0));
         }
 
@@ -620,3 +677,4 @@ namespace VectorTileRenderer
         }
     }
 }
+

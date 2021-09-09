@@ -20,7 +20,7 @@ namespace Mapsui.Demo.WPF
             style.FontDirectory = @"styles/fonts/";
 
             provider = new VectorTileRenderer.Sources.MbTilesSource(path);
-            style.SetSourceProvider(0, provider);
+            style.SetSourceProvider("openmaptiles", provider);
 
         }
         

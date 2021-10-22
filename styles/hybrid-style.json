@@ -40,6 +40,7 @@
          "id":"satellite",
          "type":"raster",
          "source":"satellite",
+         "minzoom": 7
       },
       {
          "id":"water",

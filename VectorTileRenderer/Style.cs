@@ -118,6 +118,8 @@ namespace VectorTileRenderer
         public string Type { get; set; } = "";
         public string Name { get; set; } = "";
         public Sources.ITileSource Provider { get; set; } = null;
+        public double? MinZoom { get; set; } = null;
+        public double? MaxZoom { get; set; } = null;
     }
 
     public class Style
@@ -125,6 +127,7 @@ namespace VectorTileRenderer
         public readonly string Hash = "";
         public List<Layer> Layers = new List<Layer>();
         public Dictionary<string, Source> Sources = new Dictionary<string, Source>();
+        public Dictionary<string, object> Metadata = new Dictionary<string, object>();
         //double screenScale = 0.2;// = 0.3;
         //double emToPx = 16;
 
@@ -136,6 +139,11 @@ namespace VectorTileRenderer
         {
             var json = System.IO.File.ReadAllText(path);
             dynamic jObject = JObject.Parse(json);
+
+            if (jObject["metadata"] != null)
+            {
+                Metadata = jObject.metadata.ToObject<Dictionary<string, object>>();
+            }
 
             List<string> fontNames = new List<string>();
 
@@ -155,6 +163,16 @@ namespace VectorTileRenderer
                 if (sourceDict.ContainsKey("type"))
                 {
                     source.Type = plainifyJson(sourceDict["type"]) as string;
+                }
+
+                if (sourceDict.ContainsKey("minzoom"))
+                {
+                    source.MinZoom = Convert.ToDouble(plainifyJson(sourceDict["minzoom"]));
+                }
+
+                if (sourceDict.ContainsKey("maxzoom"))
+                {
+                    source.MaxZoom = Convert.ToDouble(plainifyJson(sourceDict["maxzoom"]));
                 }
 
                 Sources[jSource.Name] = source;
@@ -700,7 +718,6 @@ namespace VectorTileRenderer
 
         public bool ValidateLayer(Layer layer, double zoom, Dictionary<string, object> attributes)
         {
-
             if (layer.MinZoom != null)
             {
                 if (zoom < layer.MinZoom.Value)
@@ -717,8 +734,9 @@ namespace VectorTileRenderer
                 }
             }
 
-            if (layer.Filter.Count() > 0)
+            if (attributes != null && layer.Filter.Count() > 0)
             {
+                // TODO make this more performant
                 if (!validateUsingFilter(layer.Filter, attributes))
                 {
                     return false;

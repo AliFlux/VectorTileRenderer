@@ -127,7 +127,7 @@ namespace VectorTileRenderer
         {
             Dictionary<Source, Stream> rasterTileCache = new Dictionary<Source, Stream>();
             Dictionary<Source, VectorTile> vectorTileCache = new Dictionary<Source, VectorTile>();
-            Dictionary<string, List<VectorTileLayer>> categorizedLayers = new Dictionary<string, List<VectorTileLayer>>();
+            Dictionary<string, List<VectorTileLayer>> categorizedVectorLayers = new Dictionary<string, List<VectorTileLayer>>();
 
             double actualZoom = zoom;
 
@@ -149,7 +149,7 @@ namespace VectorTileRenderer
             // TODO refactor this messy block
             foreach (var layer in style.Layers)
             {
-                if (whiteListLayers != null && layer.Type != "background")
+                if (whiteListLayers != null && layer.Type != "background" && layer.SourceLayer != "")
                 {
                     if (!whiteListLayers.Contains(layer.SourceLayer))
                     {
@@ -201,11 +201,11 @@ namespace VectorTileRenderer
 
                                 foreach (var tileLayer in tile.Layers)
                                 {
-                                    if (!categorizedLayers.ContainsKey(tileLayer.Name))
+                                    if (!categorizedVectorLayers.ContainsKey(tileLayer.Name))
                                     {
-                                        categorizedLayers[tileLayer.Name] = new List<VectorTileLayer>();
+                                        categorizedVectorLayers[tileLayer.Name] = new List<VectorTileLayer>();
                                     }
-                                    categorizedLayers[tileLayer.Name].Add(tileLayer);
+                                    categorizedVectorLayers[tileLayer.Name].Add(tileLayer);
                                 }
                             }
                         }
@@ -222,7 +222,7 @@ namespace VectorTileRenderer
 
                                     if (tile == null)
                                     {
-                                        return null;
+                                        continue;
                                         // throwing exceptions screws up the performance
                                         throw new FileNotFoundException("Could not load tile : " + x + "," + y + "," + zoom + " of " + layer.SourceName);
                                     }
@@ -234,20 +234,28 @@ namespace VectorTileRenderer
 
                         if (rasterTileCache.ContainsKey(layer.Source))
                         {
-                            var brush = style.ParseStyle(layer, scale, new Dictionary<string, object>());
-
-                            visualLayers.Add(new VisualLayer()
+                            if (style.ValidateLayer(layer, (int)zoom, null))
                             {
-                                Type = VisualLayerType.Raster,
-                                RasterStream = rasterTileCache[layer.Source],
-                                Brush = brush,
-                            });
+                                var brush = style.ParseStyle(layer, scale, new Dictionary<string, object>());
+
+                                if (!brush.Paint.Visibility)
+                                {
+                                    continue;
+                                }
+
+                                visualLayers.Add(new VisualLayer()
+                                {
+                                    Type = VisualLayerType.Raster,
+                                    RasterStream = rasterTileCache[layer.Source],
+                                    Brush = brush,
+                                });
+                            }
                         }
                     }
 
-                    if (categorizedLayers.ContainsKey(layer.SourceLayer))
+                    if (categorizedVectorLayers.ContainsKey(layer.SourceLayer))
                     {
-                        var tileLayers = categorizedLayers[layer.SourceLayer];
+                        var tileLayers = categorizedVectorLayers[layer.SourceLayer];
 
                         foreach (var tileLayer in tileLayers)
                         {
